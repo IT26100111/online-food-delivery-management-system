@@ -1,6 +1,8 @@
 package com.oop.fooddelivery.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 @Entity
@@ -11,11 +13,23 @@ public class Delivery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long deliveryId;
 
+    @NotNull(message = "Order ID is required.")
+    @Positive(message = "Order ID must be greater than zero.")
     private Long orderId;
+    @NotBlank(message = "Delivery person is required.")
+    @Size(max = 255, message = "Delivery person must be at most 255 characters.")
     private String deliveryPersonName;
+    @NotBlank(message = "Phone number is required.")
+    @Size(max = 255, message = "Phone number must be at most 255 characters.")
     private String phoneNumber;
+    @NotBlank(message = "Delivery address is required.")
+    @Size(max = 255, message = "Delivery address must be at most 255 characters.")
     private String deliveryAddress;
+    @NotNull(message = "Delivery date is required.")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate deliveryDate;
+    @NotBlank(message = "Delivery status is required.")
+    @Pattern(regexp = "Pending|Assigned|Out for Delivery|Delivered|Cancelled", message = "Select a valid delivery status.")
     private String deliveryStatus;
 
     // Empty constructor

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Edit Food Item | FoodFlow</title>
@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/dashboard.css" th:href="@{/css/dashboard.css}">
 </head>
 
 <body>
@@ -16,21 +16,21 @@
 <div class="dashboard-wrapper">
 
   <aside class="sidebar">
-    <a href="/" class="sidebar-logo">
+    <a href="/" th:href="@{/}" class="sidebar-logo">
       <i class="fa-solid fa-bowl-food"></i>
       FoodFlow
     </a>
 
     <ul class="sidebar-menu">
-      <li><a href="/dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
-      <li><a href="/customer"><i class="fa-solid fa-users"></i> Customers</a></li>
-      <li><a href="/restaurant"><i class="fa-solid fa-store"></i> Restaurants</a></li>
-      <li><a href="/food" class="active"><i class="fa-solid fa-burger"></i> Food Items</a></li>
+      <li><a href="/dashboard" th:href="@{/dashboard}"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="/customer" th:href="@{/customer}"><i class="fa-solid fa-users"></i> Customers</a></li>
+      <li><a href="/restaurant" th:href="@{/restaurant}"><i class="fa-solid fa-store"></i> Restaurants</a></li>
+      <li><a href="/food" th:href="@{/food}" class="active"><i class="fa-solid fa-burger"></i> Food Items</a></li>
       <li><a href="#"><i class="fa-solid fa-receipt"></i> Orders</a></li>
-      <li><a href="#"><i class="fa-solid fa-motorcycle"></i> Deliveries</a></li>
+      <li><a href="/delivery" th:href="@{/delivery}"><i class="fa-solid fa-motorcycle"></i> Deliveries</a></li>
       <li><a href="#"><i class="fa-solid fa-credit-card"></i> Payments</a></li>
       <li><a href="#"><i class="fa-solid fa-comment-dots"></i> Feedback</a></li>
-      <li><a href="/"><i class="fa-solid fa-house"></i> Back to Home</a></li>
+      <li><a href="/" th:href="@{/}"><i class="fa-solid fa-house"></i> Back to Home</a></li>
     </ul>
   </aside>
 
@@ -42,7 +42,7 @@
         <p>Update food item details, price, category, and availability.</p>
       </div>
 
-      <a href="/food" class="btn btn-outline-dark fw-bold rounded-4 px-4">
+      <a href="/food" th:href="@{/food}" class="btn btn-outline-dark fw-bold rounded-4 px-4">
         <i class="fa-solid fa-arrow-left"></i> Back
       </a>
     </div>
@@ -108,7 +108,7 @@
               <i class="fa-solid fa-pen-to-square"></i> Update Food Item
             </button>
 
-            <a href="/food" class="btn btn-outline-secondary fw-bold rounded-4 px-5 py-3">
+            <a href="/food" th:href="@{/food}" class="btn btn-outline-secondary fw-bold rounded-4 px-5 py-3">
               Cancel
             </a>
           </div>
