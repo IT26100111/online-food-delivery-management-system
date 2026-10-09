@@ -15,7 +15,7 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
   <!-- SAME CSS AS ADMIN DASHBOARD -->
-  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/dashboard.css" th:href="@{/css/dashboard.css}">
 </head>
 
 <body>
@@ -26,7 +26,7 @@
 
   <aside class="sidebar">
 
-    <a href="/" class="sidebar-logo">
+    <a href="/" th:href="@{/}" class="sidebar-logo">
       <i class="fa-solid fa-bowl-food"></i>
       FoodFlow
     </a>
@@ -34,28 +34,28 @@
     <ul class="sidebar-menu">
 
       <li>
-        <a href="/dashboard">
+        <a href="/dashboard" th:href="@{/dashboard}">
           <i class="fa-solid fa-chart-line"></i>
           Dashboard
         </a>
       </li>
 
       <li>
-        <a href="/customer">
+        <a href="/customer" th:href="@{/customer}">
           <i class="fa-solid fa-users"></i>
           Customers
         </a>
       </li>
 
       <li>
-        <a href="/restaurant">
+        <a href="/restaurant" th:href="@{/restaurant}">
           <i class="fa-solid fa-store"></i>
           Restaurants
         </a>
       </li>
 
       <li>
-        <a href="/food/item">
+        <a href="/food" th:href="@{/food}">
           <i class="fa-solid fa-burger"></i>
           Food Items
         </a>
@@ -70,7 +70,7 @@
 
       <!-- Delivery is ACTIVE on this page -->
       <li>
-        <a href="/delivery" class="active">
+        <a href="/delivery" th:href="@{/delivery}" class="active">
           <i class="fa-solid fa-motorcycle"></i>
           Deliveries
         </a>
@@ -91,7 +91,7 @@
       </li>
 
       <li>
-        <a href="/">
+        <a href="/" th:href="@{/}">
           <i class="fa-solid fa-house"></i>
           Back to Home
         </a>
@@ -138,7 +138,7 @@
           </small>
         </div>
 
-        <a href="/delivery/add" class="btn btn-warning">
+        <a href="/delivery/add" th:href="@{/delivery/add}" class="btn btn-warning">
           <i class="fa-solid fa-plus"></i>
           Assign Delivery
         </a>
@@ -221,13 +221,12 @@
               </a>
 
 
-              <a th:href="@{/delivery/delete/{id}(id=${delivery.deliveryId})}"
-                 class="btn btn-sm btn-outline-danger"
-                 onclick="return confirm('Are you sure you want to delete this delivery?')">
-
-                <i class="fa-solid fa-trash"></i>
-
-              </a>
+              <form method="post" th:action="@{/delivery/delete/{id}(id=${delivery.deliveryId})}"
+                    class="d-inline" onsubmit="return confirm('Are you sure you want to delete this delivery?')">
+                <button type="submit" class="btn btn-sm btn-outline-danger" aria-label="Delete delivery">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </form>
 
             </td>
 
