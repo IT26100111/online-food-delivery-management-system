@@ -1,176 +1,1318 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Online Food Delivery Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>FoodFlow | Food Delivery</title>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap"
+          rel="stylesheet">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="/css/style.css"
+          th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+
     <div class="container">
-        <a class="brand-logo" href="/" th:href="@{/}">
-            <i class="fa-solid fa-bowl-food"></i> FoodFlow
+
+        <a class="brand-logo"
+           href="/"
+           th:href="@{/}">
+
+            <span class="brand-mark">
+                <i class="fa-solid fa-bowl-food"></i>
+            </span>
+
+            <span>FoodFlow</span>
+
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+        <button class="navbar-toggler border-0"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar">
+
             <span class="navbar-toggler-icon"></span>
+
         </button>
 
-        <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
-            <ul class="navbar-nav align-items-lg-center">
-                <li class="nav-item"><a class="nav-link" href="/" th:href="@{/}">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="/restaurant" th:href="@{/restaurant}">Restaurants</a></li>
-                <li class="nav-item"><a class="nav-link" href="/food" th:href="@{/food}">Menu</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Orders</a></li>
-                <li class="nav-item"><a class="nav-link" href="/delivery" th:href="@{/delivery}">Delivery</a></li>
-                <li class="nav-item"><a class="btn-main ms-lg-3" href="#">Login</a></li>
+        <div class="collapse navbar-collapse justify-content-end"
+             id="mainNavbar">
+
+            <ul class="navbar-nav align-items-lg-center gap-lg-1">
+
+                <li class="nav-item">
+                    <a class="nav-link active"
+                       href="/"
+                       th:href="@{/}">
+                        Home
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="/restaurant"
+                       th:href="@{/restaurant}">
+                        Restaurants
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="/food"
+                       th:href="@{/food}">
+                        Food
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="#recommendations">
+                        Recommendations
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="#track-order">
+                        Track Order
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="#about">
+                        About
+                    </a>
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="btn-main btn-nav ms-lg-2"
+                       href="/login"
+                       th:href="@{/login}">
+
+                        <i class="fa-regular fa-user me-2"></i>
+                        Sign In
+
+                    </a>
+
+                </li>
+
             </ul>
+
         </div>
+
     </div>
+
 </nav>
 
-<!-- Hero Section -->
-<section class="hero-section">
+
+<main>
+
+    <!-- HERO -->
+    <section class="hero-section">
+
+        <div class="container">
+
+            <div class="row align-items-center g-5">
+
+                <div class="col-lg-6">
+
+                    <div class="hero-kicker reveal">
+                        <span></span>
+                        Local favourites, delivered better
+                    </div>
+
+                    <div class="hero-copy-slider reveal">
+
+                        <div class="hero-copy active"
+                             data-slide="0">
+
+                            <h1 class="hero-title">
+                                Good food.<br>
+                                <span>Moving fast.</span>
+                            </h1>
+
+                            <p class="hero-text">
+                                Fresh pizza, local favourites and quick delivery
+                                from restaurants around you.
+                            </p>
+
+                        </div>
+
+                        <div class="hero-copy"
+                             data-slide="1">
+
+                            <h1 class="hero-title">
+                                Big flavour.<br>
+                                <span>No long wait.</span>
+                            </h1>
+
+                            <p class="hero-text">
+                                From stacked burgers to quick bites,
+                                get the food you want without the long wait.
+                            </p>
+
+                        </div>
+
+                        <div class="hero-copy"
+                             data-slide="2">
+
+                            <h1 class="hero-title">
+                                Comfort food.<br>
+                                <span>Delivered fresh.</span>
+                            </h1>
+
+                            <p class="hero-text">
+                                Rice, curries and everyday favourites
+                                delivered warm and ready to enjoy.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="hero-actions reveal">
+
+                        <a href="/restaurant"
+                           th:href="@{/restaurant}"
+                           class="btn-main">
+
+                            Browse Restaurants
+
+                            <i class="fa-solid fa-arrow-right ms-2"></i>
+
+                        </a>
+
+                        <a href="/food"
+                           th:href="@{/food}"
+                           class="btn-outline-main">
+
+                            Explore Food
+
+                        </a>
+
+                    </div>
+
+                    <div class="hero-trust-row reveal">
+
+                        <div>
+
+                            <strong>
+                                <span class="counter"
+                                      data-target="25">0</span>
+                                min
+                            </strong>
+
+                            <span>Average Delivery</span>
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                <span class="counter"
+                                      data-target="18">0</span>+
+                            </strong>
+
+                            <span>Restaurants</span>
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                4.8/5
+                            </strong>
+
+                            <span>Customer Rating</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6">
+
+                    <div class="hero-visual reveal">
+
+                        <div class="hero-slideshow">
+
+                            <img class="hero-slide active"
+                                 src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=85&w=1200&auto=format&fit=crop"
+                                 alt="Fresh pizza">
+
+                            <img class="hero-slide"
+                                 src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=85&w=1200&auto=format&fit=crop"
+                                 alt="Burger meal">
+
+                            <img class="hero-slide"
+                                 src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?q=85&w=1200&auto=format&fit=crop"
+                                 alt="Rice meal">
+
+                        </div>
+
+                        <div class="delivery-strip">
+
+                            <div class="delivery-icon">
+                                <i class="fa-solid fa-motorcycle"></i>
+                            </div>
+
+                            <div>
+
+                                <small>
+                                    Live delivery
+                                </small>
+
+                                <strong>
+                                    Order #ORD-248 is on the way
+                                </strong>
+
+                            </div>
+
+                            <span class="eta">
+                                12 min
+                            </span>
+
+                        </div>
+
+                        <div class="hero-slide-dots">
+
+                            <button class="slide-dot active"></button>
+                            <button class="slide-dot"></button>
+                            <button class="slide-dot"></button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- POPULAR TODAY -->
+    <section class="category-section">
+
+        <div class="container">
+
+            <div class="category-shell">
+
+                <div class="category-intro">
+
+                    <span class="category-label">
+                        Popular Today
+                    </span>
+
+                    <p>
+                        Quick picks from the most ordered categories.
+                    </p>
+
+                </div>
+
+                <div class="category-bar">
+
+                    <a href="/food"
+                       th:href="@{/food}"
+                       class="category-chip">
+
+                        <i class="fa-solid fa-burger"></i>
+                        Burgers
+
+                    </a>
+
+                    <a href="/food"
+                       th:href="@{/food}"
+                       class="category-chip">
+
+                        <i class="fa-solid fa-pizza-slice"></i>
+                        Pizza
+
+                    </a>
+
+                    <a href="/food"
+                       th:href="@{/food}"
+                       class="category-chip">
+
+                        <i class="fa-solid fa-bowl-rice"></i>
+                        Rice
+
+                    </a>
+
+                    <a href="/food"
+                       th:href="@{/food}"
+                       class="category-chip">
+
+                        <i class="fa-solid fa-utensils"></i>
+                        Kottu
+
+                    </a>
+
+                    <a href="/food"
+                       th:href="@{/food}"
+                       class="category-chip">
+
+                        <i class="fa-solid fa-mug-hot"></i>
+                        Drinks
+
+                    </a>
+
+                    <a href="/food"
+                       th:href="@{/food}"
+                       class="category-chip">
+
+                        <i class="fa-solid fa-ice-cream"></i>
+                        Desserts
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- BEST RESTAURANTS -->
+    <section class="section-padding section-white">
+
+        <div class="container">
+
+            <div class="section-heading-row reveal">
+
+                <div>
+
+                    <span class="eyebrow">
+                        Best Restaurants
+                    </span>
+
+                    <h2 class="section-title">
+                        Top-rated places around you
+                    </h2>
+
+                    <p class="section-subtitle">
+
+                        Reliable restaurants with great food,
+                        strong ratings and quick delivery.
+
+                    </p>
+
+                </div>
+
+                <a href="/restaurant"
+                   th:href="@{/restaurant}"
+                   class="text-link">
+
+                    View all restaurants
+
+                    <i class="fa-solid fa-arrow-right ms-1"></i>
+
+                </a>
+
+            </div>
+
+            <div class="filter-row reveal">
+
+                <button class="filter-btn active">
+                    All
+                </button>
+
+                <button class="filter-btn">
+                    Top Rated
+                </button>
+
+                <button class="filter-btn">
+                    Fast Delivery
+                </button>
+
+                <button class="filter-btn">
+                    Budget Friendly
+                </button>
+
+                <button class="filter-btn">
+                    Open Now
+                </button>
+
+            </div>
+
+            <div class="row g-4">
+
+                <div class="col-lg-4 col-md-6 reveal">
+
+                    <article class="restaurant-card">
+
+                        <div class="card-image-wrap">
+
+                            <img
+                                    src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=900&auto=format&fit=crop"
+                                    alt="Fresh bowl">
+
+                            <span class="card-badge">
+                                Top Rated
+                            </span>
+
+                        </div>
+
+                        <div class="restaurant-card-body">
+
+                            <div class="restaurant-meta">
+
+                                <span>
+                                    Healthy
+                                </span>
+
+                                <span>
+                                    <i class="fa-solid fa-star"></i>
+                                    4.8
+                                </span>
+
+                            </div>
+
+                            <h4>
+                                Green Bowl Kitchen
+                            </h4>
+
+                            <p>
+                                Bowls, wraps and lighter meals.
+                            </p>
+
+                            <div class="restaurant-footer">
+
+                                <span>
+                                    <i class="fa-regular fa-clock"></i>
+                                    20–30 min
+                                </span>
+
+                                <span>
+                                    Rs. 250 delivery
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+
+                <div class="col-lg-4 col-md-6 reveal">
+
+                    <article class="restaurant-card">
+
+                        <div class="card-image-wrap">
+
+                            <img
+                                    src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=900&auto=format&fit=crop"
+                                    alt="Asian restaurant">
+
+                            <span class="card-badge">
+                                Fast Delivery
+                            </span>
+
+                        </div>
+
+                        <div class="restaurant-card-body">
+
+                            <div class="restaurant-meta">
+
+                                <span>
+                                    Asian
+                                </span>
+
+                                <span>
+                                    <i class="fa-solid fa-star"></i>
+                                    4.7
+                                </span>
+
+                            </div>
+
+                            <h4>
+                                Street Wok
+                            </h4>
+
+                            <p>
+                                Fried rice, noodles and quick bites.
+                            </p>
+
+                            <div class="restaurant-footer">
+
+                                <span>
+                                    <i class="fa-regular fa-clock"></i>
+                                    25–35 min
+                                </span>
+
+                                <span>
+                                    Rs. 200 delivery
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+
+                <div class="col-lg-4 col-md-6 reveal">
+
+                    <article class="restaurant-card">
+
+                        <div class="card-image-wrap">
+
+                            <img
+                                    src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=900&auto=format&fit=crop"
+                                    alt="Pizza restaurant">
+
+                            <span class="card-badge">
+                                Popular
+                            </span>
+
+                        </div>
+
+                        <div class="restaurant-card-body">
+
+                            <div class="restaurant-meta">
+
+                                <span>
+                                    Pizza
+                                </span>
+
+                                <span>
+                                    <i class="fa-solid fa-star"></i>
+                                    4.9
+                                </span>
+
+                            </div>
+
+                            <h4>
+                                Ember Pizza Co.
+                            </h4>
+
+                            <p>
+                                Stone-baked pizzas and sides.
+                            </p>
+
+                            <div class="restaurant-footer">
+
+                                <span>
+                                    <i class="fa-regular fa-clock"></i>
+                                    20–25 min
+                                </span>
+
+                                <span>
+                                    Rs. 300 delivery
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- BEST FOOD -->
+    <section class="section-padding food-section">
+
+        <div class="container">
+
+            <div class="section-heading-row reveal">
+
+                <div>
+
+                    <span class="eyebrow">
+                        Best Food
+                    </span>
+
+                    <h2 class="section-title">
+                        What people are ordering today
+                    </h2>
+
+                    <p class="section-subtitle">
+
+                        Popular dishes chosen across FoodFlow restaurants.
+
+                    </p>
+
+                </div>
+
+                <a href="/food"
+                   th:href="@{/food}"
+                   class="text-link">
+
+                    Explore full menu
+
+                    <i class="fa-solid fa-arrow-right ms-1"></i>
+
+                </a>
+
+            </div>
+
+            <div class="row g-4">
+
+                <div class="col-lg-3 col-md-6 reveal">
+
+                    <article class="food-card">
+
+                        <img
+                                src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=700&auto=format&fit=crop"
+                                alt="Burger">
+
+                        <div class="food-card-body">
+
+                            <small>
+                                Burger House
+                            </small>
+
+                            <h5>
+                                Classic Beef Burger
+                            </h5>
+
+                            <div class="food-price-row">
+
+                                <strong>
+                                    Rs. 1,850
+                                </strong>
+
+                                <span>
+                                    <i class="fa-solid fa-star"></i>
+                                    4.8
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 reveal">
+
+                    <article class="food-card">
+
+                        <img
+                                src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=700&auto=format&fit=crop"
+                                alt="Pizza">
+
+                        <div class="food-card-body">
+
+                            <small>
+                                Ember Pizza Co.
+                            </small>
+
+                            <h5>
+                                Pepperoni Pizza
+                            </h5>
+
+                            <div class="food-price-row">
+
+                                <strong>
+                                    Rs. 2,900
+                                </strong>
+
+                                <span>
+                                    <i class="fa-solid fa-star"></i>
+                                    4.9
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 reveal">
+
+                    <article class="food-card">
+
+                        <img
+                                src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?q=80&w=700&auto=format&fit=crop"
+                                alt="Fried rice">
+
+                        <div class="food-card-body">
+
+                            <small>
+                                Street Wok
+                            </small>
+
+                            <h5>
+                                Chicken Fried Rice
+                            </h5>
+
+                            <div class="food-price-row">
+
+                                <strong>
+                                    Rs. 1,650
+                                </strong>
+
+                                <span>
+                                    <i class="fa-solid fa-star"></i>
+                                    4.7
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 reveal">
+
+                    <article class="food-card">
+
+                        <img
+                                src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?q=80&w=700&auto=format&fit=crop"
+                                alt="Pasta">
+
+                        <div class="food-card-body">
+
+                            <small>
+                                Pasta House
+                            </small>
+
+                            <h5>
+                                Creamy Chicken Pasta
+                            </h5>
+
+                            <div class="food-price-row">
+
+                                <strong>
+                                    Rs. 2,150
+                                </strong>
+
+                                <span>
+                                    <i class="fa-solid fa-star"></i>
+                                    4.6
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RECOMMENDATIONS -->
+    <section class="section-padding recommendation-section"
+             id="recommendations">
+
+        <div class="container">
+
+            <div class="recommendation-panel reveal">
+
+                <div class="row align-items-center g-5">
+
+                    <div class="col-lg-5">
+
+                        <span class="eyebrow light">
+                            Recommendations
+                        </span>
+
+                        <h2>
+                            Not sure what to eat?
+                        </h2>
+
+                        <p>
+
+                            Start with dishes customers are loving right now.
+                            A little inspiration can make lunch much easier.
+
+                        </p>
+
+                        <a href="/food"
+                           th:href="@{/food}"
+                           class="btn-light-action">
+
+                            See Recommendations
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </a>
+
+                    </div>
+
+
+                    <div class="col-lg-7">
+
+                        <div class="recommendation-grid">
+
+                            <div class="recommendation-item">
+
+                                <strong>
+                                    Chicken Kottu
+                                </strong>
+
+                                <span>
+                                    Trending today
+                                </span>
+
+                            </div>
+
+                            <div class="recommendation-item">
+
+                                <strong>
+                                    Seafood Pizza
+                                </strong>
+
+                                <span>
+                                    Highly rated
+                                </span>
+
+                            </div>
+
+                            <div class="recommendation-item">
+
+                                <strong>
+                                    Chicken Fried Rice
+                                </strong>
+
+                                <span>
+                                    Fast delivery
+                                </span>
+
+                            </div>
+
+                            <div class="recommendation-item">
+
+                                <strong>
+                                    Chocolate Shake
+                                </strong>
+
+                                <span>
+                                    Popular dessert
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- STATS -->
+    <section class="stats-section">
+
+        <div class="container">
+
+            <div class="stats-grid">
+
+                <div class="stat-box reveal">
+
+                    <strong>
+                        <span class="counter"
+                              data-target="350">0</span>+
+                    </strong>
+
+                    <span>
+                        Orders Delivered
+                    </span>
+
+                </div>
+
+                <div class="stat-box reveal">
+
+                    <strong>
+                        <span class="counter"
+                              data-target="18">0</span>+
+                    </strong>
+
+                    <span>
+                        Restaurant Partners
+                    </span>
+
+                </div>
+
+                <div class="stat-box reveal">
+
+                    <strong>
+                        <span class="counter"
+                              data-target="124">0</span>+
+                    </strong>
+
+                    <span>
+                        Customers
+                    </span>
+
+                </div>
+
+                <div class="stat-box reveal">
+
+                    <strong>
+                        4.8
+                    </strong>
+
+                    <span>
+                        Average Rating
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- TRACK ORDER -->
+    <section class="section-padding section-white"
+             id="track-order">
+
+        <div class="container">
+
+            <div class="track-order-box reveal">
+
+                <div>
+
+                    <span class="eyebrow">
+                        Track your order
+                    </span>
+
+                    <h2>
+                        Wondering where your food is?
+                    </h2>
+
+                    <p>
+
+                        Enter your order reference to check its
+                        latest delivery status.
+
+                    </p>
+
+                </div>
+
+
+                <div class="track-search">
+
+                    <input type="text"
+                           placeholder="Example: ORD-248">
+
+                    <button type="button">
+
+                        Track Order
+
+                        <i class="fa-solid fa-location-arrow"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- HOW IT WORKS -->
+    <section class="section-padding workflow-section"
+             id="about">
+
+        <div class="container">
+
+            <div class="row align-items-start g-5">
+
+                <div class="col-lg-5 reveal">
+
+                    <span class="eyebrow">
+                        How FoodFlow Works
+                    </span>
+
+                    <h2 class="section-title">
+
+                        From restaurant<br>
+                        to your doorstep.
+
+                    </h2>
+
+                    <p class="section-subtitle">
+
+                        FoodFlow keeps every stage of the delivery process
+                        clear and manageable.
+
+                    </p>
+
+                </div>
+
+
+                <div class="col-lg-7">
+
+                    <div class="workflow-list">
+
+                        <div class="workflow-item reveal">
+
+                            <span class="workflow-number">
+                                01
+                            </span>
+
+                            <div>
+
+                                <h5>
+                                    Pick your food
+                                </h5>
+
+                                <p>
+                                    Browse restaurants and choose your meal.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="workflow-item reveal">
+
+                            <span class="workflow-number">
+                                02
+                            </span>
+
+                            <div>
+
+                                <h5>
+                                    Restaurant prepares it
+                                </h5>
+
+                                <p>
+                                    Your order moves into preparation.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="workflow-item reveal">
+
+                            <span class="workflow-number">
+                                03
+                            </span>
+
+                            <div>
+
+                                <h5>
+                                    Rider picks it up
+                                </h5>
+
+                                <p>
+                                    Delivery is assigned and dispatched.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="workflow-item reveal">
+
+                            <span class="workflow-number">
+                                04
+                            </span>
+
+                            <div>
+
+                                <h5>
+                                    Enjoy your meal
+                                </h5>
+
+                                <p>
+                                    Receive the order and share your feedback.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
     <div class="container">
-        <div class="row align-items-center g-5">
-            <div class="col-lg-6">
-                <span class="hero-badge">
-                    <i class="fa-solid fa-truck-fast"></i> Fast & Easy Food Delivery
-                </span>
 
-                <h1 class="hero-title">
-                    Delicious Food <br>
-                    Delivered <span>Fast</span>
-                </h1>
+        <div class="footer-grid">
 
-                <p class="hero-text">
-                    A smart online food delivery management system to manage customers,
-                    restaurants, food items, orders, payments, deliveries, and feedback in one place.
+            <div class="footer-brand-column">
+
+                <a class="footer-brand"
+                   href="/"
+                   th:href="@{/}">
+
+                    <i class="fa-solid fa-bowl-food"></i>
+
+                    FoodFlow
+
+                </a>
+
+                <p>
+
+                    Great food from local restaurants,
+                    delivered simply and reliably.
+
                 </p>
 
-                <a href="#" class="btn-main">
-                    Order Now <i class="fa-solid fa-arrow-right ms-2"></i>
+            </div>
+
+
+            <div>
+
+                <h6>
+                    Explore
+                </h6>
+
+                <a href="/">
+                    Home
                 </a>
 
-                <a href="/dashboard" th:href="@{/dashboard}" class="btn-outline-main">
-                    View Dashboard
+                <a href="/restaurant">
+                    Restaurants
                 </a>
+
+                <a href="/food">
+                    Food
+                </a>
+
+                <a href="#recommendations">
+                    Recommendations
+                </a>
+
             </div>
 
-            <div class="col-lg-6">
-                <div class="hero-card">
-                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=900&auto=format&fit=crop"
-                         alt="Food Delivery"
-                         class="hero-food-img">
 
-                    <div class="food-info-card">
-                        <h5>Fresh Pizza Combo</h5>
-                        <p>
-                            <i class="fa-solid fa-star text-warning"></i>
-                            4.9 Rating • 25 min delivery
-                        </p>
-                    </div>
-                </div>
+            <div>
+
+                <h6>
+                    Support
+                </h6>
+
+                <a href="#track-order">
+                    Track Order
+                </a>
+
+                <a href="#">
+                    Help Centre
+                </a>
+
+                <a href="#">
+                    Contact
+                </a>
+
+                <a href="#">
+                    Feedback
+                </a>
+
             </div>
+
+
+            <div>
+
+                <h6>
+                    Account
+                </h6>
+
+                <a href="/login">
+                    Sign In
+                </a>
+
+                <a href="#">
+                    Register
+                </a>
+
+                <a href="#">
+                    My Orders
+                </a>
+
+                <a href="#">
+                    Profile
+                </a>
+
+            </div>
+
         </div>
-    </div>
-</section>
 
-<!-- Features -->
-<section class="section-padding bg-white">
-    <div class="container text-center">
-        <h2 class="section-title">System Modules</h2>
-        <p class="section-subtitle">
-            Each module is designed for clear CRUD operations and easy management.
-        </p>
 
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="feature-card text-start">
-                    <div class="feature-icon">
-                        <i class="fa-solid fa-users"></i>
-                    </div>
-                    <h4>Customer Management</h4>
-                    <p>Register, view, update, and manage customer details.</p>
-                </div>
-            </div>
+        <div class="footer-bottom">
 
-            <div class="col-md-4">
-                <div class="feature-card text-start">
-                    <div class="feature-icon">
-                        <i class="fa-solid fa-store"></i>
-                    </div>
-                    <h4>Restaurant Management</h4>
-                    <p>Manage restaurant details, locations, and availability status.</p>
-                </div>
-            </div>
+            <p>
+                © 2026 FoodFlow. All rights reserved.
+            </p>
 
-            <div class="col-md-4">
-                <div class="feature-card text-start">
-                    <div class="feature-icon">
-                        <i class="fa-solid fa-burger"></i>
-                    </div>
-                    <h4>Food Item Management</h4>
-                    <p>Add and manage menu items, categories, prices, and availability.</p>
-                </div>
-            </div>
+            <p>
+                Online Food Delivery Management System
+            </p>
 
-            <div class="col-md-4">
-                <div class="feature-card text-start">
-                    <div class="feature-icon">
-                        <i class="fa-solid fa-receipt"></i>
-                    </div>
-                    <h4>Order Management</h4>
-                    <p>Place orders and update order statuses from pending to delivered.</p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="feature-card text-start">
-                    <div class="feature-icon">
-                        <i class="fa-solid fa-motorcycle"></i>
-                    </div>
-                    <h4>Delivery Management</h4>
-                    <p>Assign delivery persons and track delivery progress.</p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="feature-card text-start">
-                    <div class="feature-icon">
-                        <i class="fa-solid fa-credit-card"></i>
-                    </div>
-                    <h4>Payments & Feedback</h4>
-                    <p>Record payment details and manage customer feedback.</p>
-                </div>
-            </div>
         </div>
-    </div>
-</section>
 
-<!-- Footer -->
-<footer class="footer text-center">
-    <div class="container">
-        <p class="mb-0">© 2026 FoodFlow | Online Food Delivery Management System</p>
     </div>
+
 </footer>
 
-<!-- Bootstrap JS -->
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+<script src="/js/home.js"
+        th:src="@{/js/home.js}">
+</script>
+
 </body>
+
 </html>
