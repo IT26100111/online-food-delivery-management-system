@@ -27,6 +27,7 @@ public class Delivery {
             regexp = "^07[0-9]{8}$",
             message = "Enter a valid Sri Lankan mobile number (e.g. 0771234567)."
     )
+    @Size(max = 255, message = "Phone number must be at most 255 characters.")
     private String phoneNumber;
 
     @NotBlank(message = "Delivery address is required.")

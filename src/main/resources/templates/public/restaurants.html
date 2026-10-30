@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Restaurants | FoodFlow</title>
+
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+
+  <link rel="stylesheet"
+        href="/css/style.css"
+        th:href="@{/css/style.css}">
+
+
+  <link rel="stylesheet"
+        href="/css/public-pages.css"
+        th:href="@{/css/public-pages.css}">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+
+  <div class="container">
+
+
+    <a class="brand-logo"
+       href="/"
+       th:href="@{/}">
+
+            <span class="brand-mark">
+
+                <i class="fa-solid fa-bowl-food"></i>
+
+            </span>
+
+      <span>
+                FoodFlow
+            </span>
+
+    </a>
+
+
+    <button class="navbar-toggler border-0"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar">
+
+      <span class="navbar-toggler-icon"></span>
+
+    </button>
+
+
+    <div class="collapse navbar-collapse justify-content-end"
+         id="mainNavbar">
+
+
+      <ul class="navbar-nav align-items-lg-center gap-lg-1">
+
+
+        <li class="nav-item">
+
+          <a class="nav-link"
+             href="/"
+             th:href="@{/}">
+
+            Home
+
+          </a>
+
+        </li>
+
+
+        <li class="nav-item">
+
+          <a class="nav-link active"
+             href="/restaurants"
+             th:href="@{/restaurants}">
+
+            Restaurants
+
+          </a>
+
+        </li>
+
+
+        <li class="nav-item">
+
+          <a class="nav-link"
+             href="/menu"
+             th:href="@{/menu}">
+
+            Food
+
+          </a>
+
+        </li>
+
+
+        <li class="nav-item">
+
+          <a class="nav-link"
+             href="/recommendations"
+             th:href="@{/recommendations}">
+
+            Recommendations
+
+          </a>
+
+        </li>
+
+
+        <li class="nav-item">
+
+          <a class="nav-link"
+             href="/track-order"
+             th:href="@{/track-order}">
+
+            Track Order
+
+          </a>
+
+        </li>
+
+
+        <li class="nav-item">
+
+          <a class="nav-link"
+             href="/about"
+             th:href="@{/about}">
+
+            About
+
+          </a>
+
+        </li>
+
+
+        <li class="nav-item">
+
+          <a class="btn-main btn-nav ms-lg-2"
+             href="/login"
+             th:href="@{/login}">
+
+            <i class="fa-regular fa-user me-2"></i>
+
+            Sign In
+
+          </a>
+
+        </li>
+
+
+      </ul>
+
+    </div>
+
+  </div>
+
+</nav>
+
+
+
+<main>
+
+
+  <!-- =====================================================
+       PAGE HERO
+  ====================================================== -->
+
+  <section class="public-page-hero">
+
+    <div class="container">
+
+      <div class="row align-items-end g-4">
+
+        <div class="col-lg-7">
+
+                    <span class="eyebrow">
+                        Explore Restaurants
+                    </span>
+
+
+          <h1>
+            Good places.<br>
+            <span>Great food.</span>
+          </h1>
+
+
+          <p>
+
+            Discover restaurants around you,
+            compare delivery times and find the
+            right meal for today.
+
+          </p>
+
+        </div>
+
+
+        <div class="col-lg-5">
+
+          <div class="restaurant-search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+
+            <input type="text"
+                   id="restaurantSearch"
+                   placeholder="Search restaurants or cuisine">
+
+
+            <button type="button">
+
+              Search
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =====================================================
+       CUISINE FILTERS
+  ====================================================== -->
+
+  <section class="public-filter-section">
+
+    <div class="container">
+
+      <div class="public-filter-row">
+
+
+        <button class="public-filter active"
+                data-filter="all">
+
+          All Restaurants
+
+        </button>
+
+
+        <button class="public-filter"
+                data-filter="asian">
+
+          Asian
+
+        </button>
+
+
+        <button class="public-filter"
+                data-filter="pizza">
+
+          Pizza
+
+        </button>
+
+
+        <button class="public-filter"
+                data-filter="healthy">
+
+          Healthy
+
+        </button>
+
+
+        <button class="public-filter"
+                data-filter="fast-food">
+
+          Fast Food
+
+        </button>
+
+
+        <button class="public-filter"
+                data-filter="dessert">
+
+          Desserts
+
+        </button>
+
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =====================================================
+       FEATURED RESTAURANTS
+  ====================================================== -->
+
+  <section class="section-padding section-white">
+
+    <div class="container">
+
+
+      <div class="public-section-heading">
+
+        <div>
+
+                    <span class="eyebrow">
+                        Popular near you
+                    </span>
+
+
+          <h2>
+            Restaurants people keep coming back to
+          </h2>
+
+
+          <p>
+
+            Well-rated places with reliable delivery
+            and popular menu choices.
+
+          </p>
+
+        </div>
+
+
+        <div class="restaurant-sort">
+
+          <label for="sortRestaurants">
+            Sort by
+          </label>
+
+
+          <select id="sortRestaurants">
+
+            <option>
+              Recommended
+            </option>
+
+            <option>
+              Highest Rated
+            </option>
+
+            <option>
+              Fastest Delivery
+            </option>
+
+            <option>
+              Lowest Delivery Fee
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="row g-4"
+           id="restaurantGrid">
+
+
+        <!-- RESTAURANT 1 -->
+
+        <div class="col-lg-4 col-md-6 restaurant-item"
+             data-category="healthy"
+             data-name="green bowl kitchen">
+
+
+          <article class="restaurant-discovery-card">
+
+
+            <div class="restaurant-image">
+
+              <img
+                      src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=900&auto=format&fit=crop"
+                      alt="Green Bowl Kitchen">
+
+
+              <span class="restaurant-tag">
+                                Top Rated
+                            </span>
+
+
+              <button class="restaurant-favourite"
+                      type="button">
+
+                <i class="fa-regular fa-heart"></i>
+
+              </button>
+
+            </div>
+
+
+            <div class="restaurant-discovery-body">
+
+
+              <div class="restaurant-title-row">
+
+                <div>
+
+                  <h3>
+                    Green Bowl Kitchen
+                  </h3>
+
+                  <span>
+                                        Healthy • Bowls • Wraps
+                                    </span>
+
+                </div>
+
+
+                <div class="rating-pill">
+
+                  <i class="fa-solid fa-star"></i>
+
+                  4.8
+
+                </div>
+
+              </div>
+
+
+              <div class="restaurant-details">
+
+                                <span>
+
+                                    <i class="fa-regular fa-clock"></i>
+
+                                    20–30 min
+
+                                </span>
+
+
+                <span>
+
+                                    <i class="fa-solid fa-motorcycle"></i>
+
+                                    Rs. 250
+
+                                </span>
+
+
+                <span>
+
+                                    <i class="fa-solid fa-location-dot"></i>
+
+                                    Colombo
+
+                                </span>
+
+              </div>
+
+
+              <div class="restaurant-card-footer">
+
+                                <span class="open-status">
+
+                                    <span></span>
+
+                                    Open now
+
+                                </span>
+
+
+                <a href="/menu"
+                   th:href="@{/menu}">
+
+                  View Menu
+
+                  <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        </div>
+
+
+
+        <!-- RESTAURANT 2 -->
+
+        <div class="col-lg-4 col-md-6 restaurant-item"
+             data-category="asian"
+             data-name="street wok">
+
+
+          <article class="restaurant-discovery-card">
+
+
+            <div class="restaurant-image">
+
+              <img
+                      src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=900&auto=format&fit=crop"
+                      alt="Street Wok">
+
+
+              <span class="restaurant-tag">
+                                Fast Delivery
+                            </span>
+
+
+              <button class="restaurant-favourite"
+                      type="button">
+
+                <i class="fa-regular fa-heart"></i>
+
+              </button>
+
+            </div>
+
+
+            <div class="restaurant-discovery-body">
+
+
+              <div class="restaurant-title-row">
+
+                <div>
+
+                  <h3>
+                    Street Wok
+                  </h3>
+
+                  <span>
+                                        Asian • Rice • Noodles
+                                    </span>
+
+                </div>
+
+
+                <div class="rating-pill">
+
+                  <i class="fa-solid fa-star"></i>
+
+                  4.7
+
+                </div>
+
+              </div>
+
+
+              <div class="restaurant-details">
+
+                                <span>
+
+                                    <i class="fa-regular fa-clock"></i>
+
+                                    25–35 min
+
+                                </span>
+
+
+                <span>
+
+                                    <i class="fa-solid fa-motorcycle"></i>
+
+                                    Rs. 200
+
+                                </span>
+
+
+                <span>
+
+                                    <i class="fa-solid fa-location-dot"></i>
+
+                                    Nugegoda
+
+                                </span>
+
+              </div>
+
+
+              <div class="restaurant-card-footer">
+
+                                <span class="open-status">
+
+                                    <span></span>
+
+                                    Open now
+
+                                </span>
+
+
+                <a href="/menu"
+                   th:href="@{/menu}">
+
+                  View Menu
+
+                  <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        </div>
+
+
+
+        <!-- RESTAURANT 3 -->
+
+        <div class="col-lg-4 col-md-6 restaurant-item"
+             data-category="pizza"
+             data-name="ember pizza co">
+
+
+          <article class="restaurant-discovery-card">
+
+
+            <div class="restaurant-image">
+
+              <img
+                      src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=900&auto=format&fit=crop"
+                      alt="Ember Pizza Co">
+
+
+              <span class="restaurant-tag">
+                                Popular
+                            </span>
+
+
+              <button class="restaurant-favourite"
+                      type="button">
+
+                <i class="fa-regular fa-heart"></i>
+
+              </button>
+
+            </div>
+
+
+            <div class="restaurant-discovery-body">
+
+
+              <div class="restaurant-title-row">
+
+                <div>
+
+                  <h3>
+                    Ember Pizza Co.
+                  </h3>
+
+                  <span>
+                                        Pizza • Italian • Sides
+                                    </span>
+
+                </div>
+
+
+                <div class="rating-pill">
+
+                  <i class="fa-solid fa-star"></i>
+
+                  4.9
+
+                </div>
+
+              </div>
+
+
+              <div class="restaurant-details">
+
+                                <span>
+
+                                    <i class="fa-regular fa-clock"></i>
+
+                                    20–25 min
+
+                                </span>
+
+
+                <span>
+
+                                    <i class="fa-solid fa-motorcycle"></i>
+
+                                    Rs. 300
+
+                                </span>
+
+
+                <span>
+
+                                    <i class="fa-solid fa-location-dot"></i>
+
+                                    Rajagiriya
+
+                                </span>
+
+              </div>
+
+
+              <div class="restaurant-card-footer">
+
+                                <span class="open-status">
+
+                                    <span></span>
+
+                                    Open now
+
+                                </span>
+
+
+                <a href="/menu"
+                   th:href="@{/menu}">
+
+                  View Menu
+
+                  <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        </div>
+
+
+
+        <!-- RESTAURANT 4 -->
+
+        <div class="col-lg-4 col-md-6 restaurant-item"
+             data-category="fast-food"
+             data-name="burger yard">
+
+
+          <article class="restaurant-discovery-card">
+
+
+            <div class="restaurant-image">
+
+              <img
+                      src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=900&auto=format&fit=crop"
+                      alt="Burger Yard">
+
+
+              <span class="restaurant-tag">
+                                Customer Favourite
+                            </span>
+
+
+              <button class="restaurant-favourite"
+                      type="button">
+
+                <i class="fa-regular fa-heart"></i>
+
+              </button>
+
+            </div>
+
+
+            <div class="restaurant-discovery-body">
+
+
+              <div class="restaurant-title-row">
+
+                <div>
+
+                  <h3>
+                    Burger Yard
+                  </h3>
+
+                  <span>
+                                        Burgers • Fries • Drinks
+                                    </span>
+
+                </div>
+
+
+                <div class="rating-pill">
+
+                  <i class="fa-solid fa-star"></i>
+
+                  4.6
+
+                </div>
+
+              </div>
+
+
+              <div class="restaurant-details">
+
+                                <span>
+                                    <i class="fa-regular fa-clock"></i>
+                                    15–25 min
+                                </span>
+
+
+                <span>
+                                    <i class="fa-solid fa-motorcycle"></i>
+                                    Rs. 180
+                                </span>
+
+
+                <span>
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    Kotte
+                                </span>
+
+              </div>
+
+
+              <div class="restaurant-card-footer">
+
+                                <span class="open-status">
+
+                                    <span></span>
+
+                                    Open now
+
+                                </span>
+
+
+                <a href="/menu"
+                   th:href="@{/menu}">
+
+                  View Menu
+
+                  <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        </div>
+
+
+
+        <!-- RESTAURANT 5 -->
+
+        <div class="col-lg-4 col-md-6 restaurant-item"
+             data-category="dessert"
+             data-name="sweet room">
+
+
+          <article class="restaurant-discovery-card">
+
+
+            <div class="restaurant-image">
+
+              <img
+                      src="https://images.unsplash.com/photo-1551024506-0bccd828d307?q=80&w=900&auto=format&fit=crop"
+                      alt="Sweet Room">
+
+
+              <span class="restaurant-tag">
+                                Sweet Pick
+                            </span>
+
+
+              <button class="restaurant-favourite"
+                      type="button">
+
+                <i class="fa-regular fa-heart"></i>
+
+              </button>
+
+            </div>
+
+
+            <div class="restaurant-discovery-body">
+
+
+              <div class="restaurant-title-row">
+
+                <div>
+
+                  <h3>
+                    Sweet Room
+                  </h3>
+
+                  <span>
+                                        Desserts • Cakes • Drinks
+                                    </span>
+
+                </div>
+
+
+                <div class="rating-pill">
+
+                  <i class="fa-solid fa-star"></i>
+
+                  4.8
+
+                </div>
+
+              </div>
+
+
+              <div class="restaurant-details">
+
+                                <span>
+                                    <i class="fa-regular fa-clock"></i>
+                                    20–30 min
+                                </span>
+
+
+                <span>
+                                    <i class="fa-solid fa-motorcycle"></i>
+                                    Rs. 220
+                                </span>
+
+
+                <span>
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    Colombo
+                                </span>
+
+              </div>
+
+
+              <div class="restaurant-card-footer">
+
+                                <span class="open-status">
+
+                                    <span></span>
+
+                                    Open now
+
+                                </span>
+
+
+                <a href="/menu"
+                   th:href="@{/menu}">
+
+                  View Menu
+
+                  <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        </div>
+
+
+
+        <!-- RESTAURANT 6 -->
+
+        <div class="col-lg-4 col-md-6 restaurant-item"
+             data-category="asian"
+             data-name="ceylon kitchen">
+
+
+          <article class="restaurant-discovery-card">
+
+
+            <div class="restaurant-image">
+
+              <img
+                      src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?q=80&w=900&auto=format&fit=crop"
+                      alt="Ceylon Kitchen">
+
+
+              <span class="restaurant-tag">
+                                Local Favourite
+                            </span>
+
+
+              <button class="restaurant-favourite"
+                      type="button">
+
+                <i class="fa-regular fa-heart"></i>
+
+              </button>
+
+            </div>
+
+
+            <div class="restaurant-discovery-body">
+
+
+              <div class="restaurant-title-row">
+
+                <div>
+
+                  <h3>
+                    Ceylon Kitchen
+                  </h3>
+
+                  <span>
+                                        Sri Lankan • Rice • Curry
+                                    </span>
+
+                </div>
+
+
+                <div class="rating-pill">
+
+                  <i class="fa-solid fa-star"></i>
+
+                  4.9
+
+                </div>
+
+              </div>
+
+
+              <div class="restaurant-details">
+
+                                <span>
+                                    <i class="fa-regular fa-clock"></i>
+                                    25–35 min
+                                </span>
+
+
+                <span>
+                                    <i class="fa-solid fa-motorcycle"></i>
+                                    Rs. 200
+                                </span>
+
+
+                <span>
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    Battaramulla
+                                </span>
+
+              </div>
+
+
+              <div class="restaurant-card-footer">
+
+                                <span class="open-status">
+
+                                    <span></span>
+
+                                    Open now
+
+                                </span>
+
+
+                <a href="/menu"
+                   th:href="@{/menu}">
+
+                  View Menu
+
+                  <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+
+      <!-- EMPTY STATE -->
+
+      <div class="restaurant-empty"
+           id="restaurantEmpty">
+
+        <i class="fa-solid fa-utensils"></i>
+
+        <h3>
+          No restaurants found
+        </h3>
+
+        <p>
+          Try another restaurant name or category.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =====================================================
+       CTA
+  ====================================================== -->
+
+  <section class="section-padding restaurant-cta-section">
+
+    <div class="container">
+
+      <div class="restaurant-page-cta">
+
+        <div>
+
+                    <span class="eyebrow light">
+                        Hungry already?
+                    </span>
+
+
+          <h2>
+            Skip the scrolling.<br>
+            Find something delicious.
+          </h2>
+
+        </div>
+
+
+        <a href="/menu"
+           th:href="@{/menu}"
+           class="btn-light-action">
+
+          Explore Food
+
+          <i class="fa-solid fa-arrow-right"></i>
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+  <div class="container">
+
+    <div class="footer-grid">
+
+
+      <div class="footer-brand-column">
+
+        <a class="footer-brand"
+           href="/"
+           th:href="@{/}">
+
+          <i class="fa-solid fa-bowl-food"></i>
+
+          FoodFlow
+
+        </a>
+
+
+        <p>
+
+          Great food from local restaurants,
+          delivered simply and reliably.
+
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <h6>
+          Explore
+        </h6>
+
+        <a href="/"
+           th:href="@{/}">
+          Home
+        </a>
+
+        <a href="/restaurants"
+           th:href="@{/restaurants}">
+          Restaurants
+        </a>
+
+        <a href="/menu"
+           th:href="@{/menu}">
+          Food
+        </a>
+
+        <a href="/recommendations"
+           th:href="@{/recommendations}">
+          Recommendations
+        </a>
+
+      </div>
+
+
+      <div>
+
+        <h6>
+          Support
+        </h6>
+
+        <a href="/track-order"
+           th:href="@{/track-order}">
+          Track Order
+        </a>
+
+        <a href="#">
+          Help Centre
+        </a>
+
+        <a href="#">
+          Contact
+        </a>
+
+        <a href="#">
+          Feedback
+        </a>
+
+      </div>
+
+
+      <div>
+
+        <h6>
+          Account
+        </h6>
+
+        <a href="/login"
+           th:href="@{/login}">
+          Sign In
+        </a>
+
+        <a href="#">
+          Register
+        </a>
+
+        <a href="#">
+          My Orders
+        </a>
+
+        <a href="#">
+          Profile
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+      <p>
+        © 2026 FoodFlow. All rights reserved.
+      </p>
+
+      <p>
+        Online Food Delivery Management System
+      </p>
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script src="/js/restaurants.js"
+        th:src="@{/js/restaurants.js}">
+</script>
+
+
+</body>
+
+</html>

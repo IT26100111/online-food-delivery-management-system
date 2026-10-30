@@ -4,6 +4,10 @@ import com.oop.fooddelivery.model.Delivery;
 import com.oop.fooddelivery.service.DeliveryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -16,6 +20,17 @@ public class DeliveryController {
         this.deliveryService = deliveryService;
     }
 
+    @InitBinder("delivery")
+    public void bindDeliveryFields(WebDataBinder binder) {
+        binder.setAllowedFields("orderId", "deliveryPersonName", "phoneNumber",
+                "deliveryAddress", "deliveryDate", "deliveryStatus");
+    }
+
+    @ModelAttribute("deliveryStatuses")
+    public List<String> deliveryStatuses() {
+        return List.of("Pending", "Assigned", "Out for Delivery", "Delivered", "Cancelled");
+    }
+
     // READ - display all deliveries
     @GetMapping
     public String viewDeliveries(Model model) {
@@ -26,13 +41,20 @@ public class DeliveryController {
     // Show assign delivery form
     @GetMapping("/add")
     public String showAddForm(Model model) {
-        model.addAttribute("delivery", new Delivery());
+        Delivery delivery = new Delivery();
+        delivery.setDeliveryStatus("Pending");
+        model.addAttribute("delivery", delivery);
         return "delivery/assign-delivery";
     }
 
     // CREATE - save new delivery
     @PostMapping("/add")
-    public String addDelivery(@ModelAttribute Delivery delivery) {
+    public String addDelivery(@Valid @ModelAttribute("delivery") Delivery delivery,
+                              BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "delivery/assign-delivery";
+        }
+        delivery.setDeliveryId(null);
         deliveryService.saveDelivery(delivery);
         return "redirect:/delivery";
     }
@@ -54,16 +76,22 @@ public class DeliveryController {
     // UPDATE
     @PostMapping("/edit/{id}")
     public String updateDelivery(@PathVariable Long id,
-                                 @ModelAttribute Delivery delivery) {
-
+                                 @Valid @ModelAttribute("delivery") Delivery delivery,
+                                 BindingResult bindingResult) {
+        if (deliveryService.getDeliveryById(id) == null) {
+            return "redirect:/delivery";
+        }
         delivery.setDeliveryId(id);
+        if (bindingResult.hasErrors()) {
+            return "delivery/edit-delivery";
+        }
         deliveryService.saveDelivery(delivery);
 
         return "redirect:/delivery";
     }
 
     // DELETE
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteDelivery(@PathVariable Long id) {
 
         deliveryService.deleteDelivery(id);
