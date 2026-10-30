@@ -1,3 +1,4 @@
+
 package com.oop.fooddelivery.model;
 
 import jakarta.persistence.*;
@@ -16,20 +17,32 @@ public class Delivery {
     @NotNull(message = "Order ID is required.")
     @Positive(message = "Order ID must be greater than zero.")
     private Long orderId;
+
     @NotBlank(message = "Delivery person is required.")
     @Size(max = 255, message = "Delivery person must be at most 255 characters.")
     private String deliveryPersonName;
+
     @NotBlank(message = "Phone number is required.")
+    @Pattern(
+            regexp = "^07[0-9]{8}$",
+            message = "Enter a valid Sri Lankan mobile number (e.g. 0771234567)."
+    )
     @Size(max = 255, message = "Phone number must be at most 255 characters.")
     private String phoneNumber;
+
     @NotBlank(message = "Delivery address is required.")
     @Size(max = 255, message = "Delivery address must be at most 255 characters.")
     private String deliveryAddress;
+
     @NotNull(message = "Delivery date is required.")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate deliveryDate;
+
     @NotBlank(message = "Delivery status is required.")
-    @Pattern(regexp = "Pending|Assigned|Out for Delivery|Delivered|Cancelled", message = "Select a valid delivery status.")
+    @Pattern(
+            regexp = "Pending|Assigned|Out for Delivery|Delivered|Cancelled",
+            message = "Select a valid delivery status."
+    )
     private String deliveryStatus;
 
     // Empty constructor
