@@ -1,3 +1,4 @@
+
 package com.oop.fooddelivery.model;
 
 import jakarta.persistence.*;
@@ -14,12 +15,19 @@ public class Restaurant {
     private Long restaurantId;
 
     @NotBlank(message = "Restaurant name is required")
-    @Size(min = 2, max = 100, message = "Restaurant name must be between 2 and 100 characters")
-    @Column(nullable = false)
+    @Size(
+            min = 2,
+            max = 100,
+            message = "Restaurant name must be between 2 and 100 characters"
+    )
+    @Column(nullable = false, length = 100)
     private String restaurantName;
 
     @NotBlank(message = "Address is required")
-    @Size(max = 255, message = "Address cannot exceed 255 characters")
+    @Size(
+            max = 255,
+            message = "Address cannot exceed 255 characters"
+    )
     @Column(nullable = false)
     private String address;
 
@@ -28,26 +36,34 @@ public class Restaurant {
             regexp = "^[0-9]{10}$",
             message = "Phone number must contain exactly 10 digits"
     )
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private String phoneNumber;
 
     @NotBlank(message = "Cuisine type is required")
-    @Size(max = 60, message = "Cuisine type cannot exceed 60 characters")
-    @Column(nullable = false)
+    @Size(
+            max = 60,
+            message = "Cuisine type cannot exceed 60 characters"
+    )
+    @Column(nullable = false, length = 60)
     private String cuisineType;
 
     @NotBlank(message = "Status is required")
-    @Column(nullable = false)
+    @Pattern(
+            regexp = "^(Active|Inactive)$",
+            message = "Status must be Active or Inactive"
+    )
+    @Column(nullable = false, length = 20)
     private String status;
 
     public Restaurant() {
     }
 
-    public Restaurant(String restaurantName,
-                      String address,
-                      String phoneNumber,
-                      String cuisineType,
-                      String status) {
+    public Restaurant(
+            String restaurantName,
+            String address,
+            String phoneNumber,
+            String cuisineType,
+            String status) {
 
         this.restaurantName = restaurantName;
         this.address = address;
@@ -97,19 +113,15 @@ public class Restaurant {
     }
 
     public void setStatus(String status) {
-        if (status == null || status.isBlank()) {
-            this.status = "Active";
-        } else {
-            this.status = status;
-        }
+        this.status = status;
     }
 
     public boolean isActive() {
-        return "Active".equalsIgnoreCase(status);
+        return "Active".equals(status);
     }
 
     public boolean hasValidStatus() {
-        return "Active".equalsIgnoreCase(status)
-                || "Inactive".equalsIgnoreCase(status);
+        return "Active".equals(status)
+                || "Inactive".equals(status);
     }
 }

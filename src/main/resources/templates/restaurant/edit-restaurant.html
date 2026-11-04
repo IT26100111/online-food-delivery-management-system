@@ -1,14 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
   <title>Edit Restaurant</title>
 
   <link
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-  >
+          rel="stylesheet">
 </head>
 
 <body>
@@ -16,23 +19,18 @@
 <div class="container py-5">
 
   <div class="row justify-content-center">
-
     <div class="col-lg-7">
 
       <div class="card shadow-sm">
 
         <div class="card-header bg-white py-3">
-
-          <h3 class="mb-0">
-            Edit Restaurant
-          </h3>
-
+          <h3 class="mb-0">Edit Restaurant</h3>
         </div>
 
         <div class="card-body p-4">
 
           <form
-                  th:action="@{/restaurant/edit/{id}(id=${restaurant.restaurantId})}"
+                  th:action="@{/restaurant/edit/{id}(id=${restaurantId})}"
                   th:object="${restaurant}"
                   method="post">
 
@@ -57,7 +55,6 @@
                       th:if="${#fields.hasErrors('restaurantName')}"
                       th:errors="*{restaurantName}">
               </div>
-
             </div>
 
             <!-- Cuisine Type -->
@@ -80,7 +77,6 @@
                       th:if="${#fields.hasErrors('cuisineType')}"
                       th:errors="*{cuisineType}">
               </div>
-
             </div>
 
             <!-- Phone Number -->
@@ -106,6 +102,9 @@
                       th:errors="*{phoneNumber}">
               </div>
 
+              <div class="form-text">
+                Enter a 10-digit phone number.
+              </div>
             </div>
 
             <!-- Address -->
@@ -121,15 +120,13 @@
                       th:classappend="${#fields.hasErrors('address')} ? 'is-invalid' : ''"
                       rows="3"
                       required
-                      maxlength="255">
-                            </textarea>
+                      maxlength="255"></textarea>
 
               <div
                       class="invalid-feedback"
                       th:if="${#fields.hasErrors('address')}"
                       th:errors="*{address}">
               </div>
-
             </div>
 
             <!-- Status -->
@@ -145,6 +142,10 @@
                       th:classappend="${#fields.hasErrors('status')} ? 'is-invalid' : ''"
                       required>
 
+                <option value="">
+                  Select status
+                </option>
+
                 <option value="Active">
                   Active
                 </option>
@@ -152,7 +153,6 @@
                 <option value="Inactive">
                   Inactive
                 </option>
-
               </select>
 
               <div
@@ -160,10 +160,9 @@
                       th:if="${#fields.hasErrors('status')}"
                       th:errors="*{status}">
               </div>
-
             </div>
 
-            <!-- Buttons -->
+            <!-- Action Buttons -->
             <div class="d-flex gap-2">
 
               <button
@@ -171,7 +170,6 @@
                       class="btn btn-primary">
 
                 Update Restaurant
-
               </button>
 
               <a
@@ -179,21 +177,16 @@
                       class="btn btn-outline-secondary">
 
                 Cancel
-
               </a>
-
             </div>
 
           </form>
 
         </div>
-
       </div>
 
     </div>
-
   </div>
-
 </div>
 
 </body>

@@ -1,8 +1,11 @@
+
 package com.oop.fooddelivery.controller;
 
 import com.oop.fooddelivery.model.Restaurant;
 import com.oop.fooddelivery.service.RestaurantOperations;
+
 import jakarta.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,12 +17,16 @@ public class RestaurantController {
 
     private final RestaurantOperations restaurantService;
 
-    public RestaurantController(RestaurantOperations restaurantService) {
+    public RestaurantController(
+            RestaurantOperations restaurantService) {
+
         this.restaurantService = restaurantService;
     }
 
+    // READ - List all restaurants
     @GetMapping
     public String getAllRestaurants(Model model) {
+
         model.addAttribute(
                 "restaurants",
                 restaurantService.getAllRestaurants()
@@ -28,25 +35,20 @@ public class RestaurantController {
         return "restaurant/restaurant-list";
     }
 
+    // CREATE - Display Add form
     @GetMapping("/add")
     public String showAddRestaurantForm(Model model) {
+
         model.addAttribute("restaurant", new Restaurant());
 
         return "restaurant/add-restaurant";
     }
 
+    // CREATE - Save restaurant
     @PostMapping("/add")
     public String addRestaurant(
             @Valid @ModelAttribute("restaurant") Restaurant restaurant,
             BindingResult bindingResult) {
-
-        if (!restaurant.hasValidStatus()) {
-            bindingResult.rejectValue(
-                    "status",
-                    "invalid.status",
-                    "Status must be Active or Inactive"
-            );
-        }
 
         if (bindingResult.hasErrors()) {
             return "restaurant/add-restaurant";
@@ -57,6 +59,7 @@ public class RestaurantController {
         return "redirect:/restaurant";
     }
 
+    // UPDATE - Display Edit form
     @GetMapping("/edit/{id}")
     public String showEditRestaurantForm(
             @PathVariable Long id,
@@ -70,27 +73,18 @@ public class RestaurantController {
         }
 
         model.addAttribute("restaurant", restaurant);
+        model.addAttribute("restaurantId", id);
 
         return "restaurant/edit-restaurant";
     }
 
+    // UPDATE - Save edited restaurant
     @PostMapping("/edit/{id}")
     public String updateRestaurant(
             @PathVariable Long id,
             @Valid @ModelAttribute("restaurant") Restaurant formRestaurant,
-            BindingResult bindingResult) {
-
-        if (!formRestaurant.hasValidStatus()) {
-            bindingResult.rejectValue(
-                    "status",
-                    "invalid.status",
-                    "Status must be Active or Inactive"
-            );
-        }
-
-        if (bindingResult.hasErrors()) {
-            return "restaurant/edit-restaurant";
-        }
+            BindingResult bindingResult,
+            Model model) {
 
         Restaurant existingRestaurant =
                 restaurantService.getRestaurantById(id);
@@ -99,6 +93,15 @@ public class RestaurantController {
             return "redirect:/restaurant";
         }
 
+        // Preserve the URL ID when validation fails.
+        model.addAttribute("restaurantId", id);
+
+        if (bindingResult.hasErrors()) {
+            return "restaurant/edit-restaurant";
+        }
+
+        // Update the existing database entity instead
+        // of saving the form object directly.
         existingRestaurant.setRestaurantName(
                 formRestaurant.getRestaurantName()
         );
@@ -124,6 +127,7 @@ public class RestaurantController {
         return "redirect:/restaurant";
     }
 
+    // DELETE - Remove restaurant
     @GetMapping("/delete/{id}")
     public String deleteRestaurant(
             @PathVariable Long id) {
