@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add Payment | FoodFlow</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+<div class="dashboard-wrapper">
+  <aside class="sidebar">
+    <a th:href="@{/}" class="sidebar-logo"><i class="fa-solid fa-bowl-food"></i> FoodFlow</a>
+    <ul class="sidebar-menu">
+      <li><a th:href="@{/dashboard}"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+      <li><a th:href="@{/customer}"><i class="fa-solid fa-users"></i> Customers</a></li>
+      <li><a th:href="@{/restaurant}"><i class="fa-solid fa-store"></i> Restaurants</a></li>
+      <li><a th:href="@{/food}"><i class="fa-solid fa-burger"></i> Food Items</a></li>
+      <li><a th:href="@{/order}"><i class="fa-solid fa-receipt"></i> Orders</a></li>
+      <li><a th:href="@{/delivery}"><i class="fa-solid fa-truck"></i> Delivery</a></li>
+      <li><a class="active" th:href="@{/payment}"><i class="fa-solid fa-credit-card"></i> Payments</a></li>
+      <li><a th:href="@{/feedback}"><i class="fa-solid fa-star"></i> Feedback</a></li>
+    </ul>
+  </aside>
+  <main class="main-content">
+
+    <div class="topbar">
+      <div><h1>Add Payment</h1><p>Register payment against an existing order.</p></div>
+      <a th:href="@{/payment}" class="btn btn-outline-secondary rounded-4 px-4">Back</a>
+    </div>
+    <section class="content-card">
+      <div class="alert alert-info">Card payments are simulated. No actual funds are charged or transferred. All new payments begin as Pending until confirmed.</div>
+      <div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
+      <form th:action="@{/payment/add}" method="post">
+        <div class="row g-4">
+          <div class="col-md-6">
+            <label for="orderId" class="form-label fw-semibold">Order</label>
+            <select id="orderId" name="orderId" class="form-select form-select-lg rounded-4" required>
+              <option value="">Select an existing order</option>
+              <option th:each="order : ${orders}"
+                      th:value="${order.orderId}"
+                      th:text="|Order #${order.orderId} - Rs. ${order.totalAmount}|"
+                      th:selected="${selectedOrderId != null and selectedOrderId == order.orderId}"></option>
+            </select>
+            <div class="form-text">The amount and customer are retrieved automatically from this order.</div>
+          </div>
+          <div class="col-md-6">
+            <label for="paymentMethod" class="form-label fw-semibold">Payment Method</label>
+            <select id="paymentMethod" name="paymentMethod" class="form-select form-select-lg rounded-4" required>
+              <option value="">Select method</option>
+              <option th:each="method : ${methods}"
+                      th:value="${method.name()}"
+                      th:text="${method.displayName}"
+                      th:selected="${selectedMethod != null and selectedMethod == method.name()}"></option>
+            </select>
+          </div>
+          <div class="col-12 d-flex flex-wrap gap-3 mt-4">
+            <button class="btn btn-warning fw-bold rounded-4 px-5 py-3" type="submit">Save Payment</button>
+            <a th:href="@{/payment}" class="btn btn-light fw-bold rounded-4 px-5 py-3">Cancel</a>
+          </div>
+        </div>
+      </form>
+    </section>
+  </main>
+</div>
+</body>
+</html>
