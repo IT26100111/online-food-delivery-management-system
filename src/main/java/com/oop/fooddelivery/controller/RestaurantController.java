@@ -2,8 +2,10 @@ package com.oop.fooddelivery.controller;
 
 import com.oop.fooddelivery.model.Restaurant;
 import com.oop.fooddelivery.service.RestaurantOperations;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -35,7 +37,20 @@ public class RestaurantController {
 
     @PostMapping("/add")
     public String addRestaurant(
-            @ModelAttribute Restaurant restaurant) {
+            @Valid @ModelAttribute("restaurant") Restaurant restaurant,
+            BindingResult bindingResult) {
+
+        if (!restaurant.hasValidStatus()) {
+            bindingResult.rejectValue(
+                    "status",
+                    "invalid.status",
+                    "Status must be Active or Inactive"
+            );
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "restaurant/add-restaurant";
+        }
 
         restaurantService.saveRestaurant(restaurant);
 
@@ -62,7 +77,20 @@ public class RestaurantController {
     @PostMapping("/edit/{id}")
     public String updateRestaurant(
             @PathVariable Long id,
-            @ModelAttribute Restaurant formRestaurant) {
+            @Valid @ModelAttribute("restaurant") Restaurant formRestaurant,
+            BindingResult bindingResult) {
+
+        if (!formRestaurant.hasValidStatus()) {
+            bindingResult.rejectValue(
+                    "status",
+                    "invalid.status",
+                    "Status must be Active or Inactive"
+            );
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "restaurant/edit-restaurant";
+        }
 
         Restaurant existingRestaurant =
                 restaurantService.getRestaurantById(id);

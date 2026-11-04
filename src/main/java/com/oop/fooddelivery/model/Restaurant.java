@@ -1,6 +1,9 @@
 package com.oop.fooddelivery.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "restaurants")
@@ -10,18 +13,30 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long restaurantId;
 
+    @NotBlank(message = "Restaurant name is required")
+    @Size(min = 2, max = 100, message = "Restaurant name must be between 2 and 100 characters")
     @Column(nullable = false)
     private String restaurantName;
 
+    @NotBlank(message = "Address is required")
+    @Size(max = 255, message = "Address cannot exceed 255 characters")
     @Column(nullable = false)
     private String address;
 
+    @NotBlank(message = "Phone number is required")
+    @Pattern(
+            regexp = "^[0-9]{10}$",
+            message = "Phone number must contain exactly 10 digits"
+    )
     @Column(nullable = false)
     private String phoneNumber;
 
+    @NotBlank(message = "Cuisine type is required")
+    @Size(max = 60, message = "Cuisine type cannot exceed 60 characters")
     @Column(nullable = false)
     private String cuisineType;
 
+    @NotBlank(message = "Status is required")
     @Column(nullable = false)
     private String status;
 
@@ -38,7 +53,7 @@ public class Restaurant {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.cuisineType = cuisineType;
-        this.status = status;
+        setStatus(status);
     }
 
     public Long getRestaurantId() {
@@ -82,7 +97,6 @@ public class Restaurant {
     }
 
     public void setStatus(String status) {
-
         if (status == null || status.isBlank()) {
             this.status = "Active";
         } else {
@@ -92,5 +106,10 @@ public class Restaurant {
 
     public boolean isActive() {
         return "Active".equalsIgnoreCase(status);
+    }
+
+    public boolean hasValidStatus() {
+        return "Active".equalsIgnoreCase(status)
+                || "Inactive".equalsIgnoreCase(status);
     }
 }

@@ -22,11 +22,9 @@
       <div class="card shadow-sm">
 
         <div class="card-header bg-white py-3">
-
           <h3 class="mb-0">
             Add Restaurant
           </h3>
-
         </div>
 
         <div class="card-body p-4">
@@ -36,6 +34,7 @@
                   th:object="${restaurant}"
                   method="post">
 
+            <!-- Restaurant Name -->
             <div class="mb-3">
 
               <label class="form-label">
@@ -46,12 +45,20 @@
                       type="text"
                       class="form-control"
                       th:field="*{restaurantName}"
+                      th:classappend="${#fields.hasErrors('restaurantName')} ? 'is-invalid' : ''"
                       required
                       minlength="2"
                       maxlength="100">
 
+              <div
+                      class="invalid-feedback"
+                      th:if="${#fields.hasErrors('restaurantName')}"
+                      th:errors="*{restaurantName}">
+              </div>
+
             </div>
 
+            <!-- Cuisine Type -->
             <div class="mb-3">
 
               <label class="form-label">
@@ -62,12 +69,20 @@
                       type="text"
                       class="form-control"
                       th:field="*{cuisineType}"
+                      th:classappend="${#fields.hasErrors('cuisineType')} ? 'is-invalid' : ''"
                       required
                       maxlength="60"
                       placeholder="e.g. Sri Lankan, Italian, Chinese">
 
+              <div
+                      class="invalid-feedback"
+                      th:if="${#fields.hasErrors('cuisineType')}"
+                      th:errors="*{cuisineType}">
+              </div>
+
             </div>
 
+            <!-- Phone Number -->
             <div class="mb-3">
 
               <label class="form-label">
@@ -78,10 +93,17 @@
                       type="tel"
                       class="form-control"
                       th:field="*{phoneNumber}"
+                      th:classappend="${#fields.hasErrors('phoneNumber')} ? 'is-invalid' : ''"
                       required
                       pattern="[0-9]{10}"
                       maxlength="10"
                       placeholder="0771234567">
+
+              <div
+                      class="invalid-feedback"
+                      th:if="${#fields.hasErrors('phoneNumber')}"
+                      th:errors="*{phoneNumber}">
+              </div>
 
               <div class="form-text">
                 Enter a 10 digit phone number.
@@ -89,6 +111,7 @@
 
             </div>
 
+            <!-- Address -->
             <div class="mb-3">
 
               <label class="form-label">
@@ -98,13 +121,21 @@
               <textarea
                       class="form-control"
                       th:field="*{address}"
+                      th:classappend="${#fields.hasErrors('address')} ? 'is-invalid' : ''"
                       rows="3"
                       required
                       maxlength="255">
                             </textarea>
 
+              <div
+                      class="invalid-feedback"
+                      th:if="${#fields.hasErrors('address')}"
+                      th:errors="*{address}">
+              </div>
+
             </div>
 
+            <!-- Status -->
             <div class="mb-4">
 
               <label class="form-label">
@@ -114,6 +145,7 @@
               <select
                       class="form-select"
                       th:field="*{status}"
+                      th:classappend="${#fields.hasErrors('status')} ? 'is-invalid' : ''"
                       required>
 
                 <option value="">
@@ -130,8 +162,15 @@
 
               </select>
 
+              <div
+                      class="invalid-feedback"
+                      th:if="${#fields.hasErrors('status')}"
+                      th:errors="*{status}">
+              </div>
+
             </div>
 
+            <!-- Buttons -->
             <div class="d-flex gap-2">
 
               <button
