@@ -184,7 +184,7 @@ public class OrderController {
 
         orderService.saveOrder(order);
 
-        return "redirect:/order" + id;
+        return "redirect:/order/" + id;
     }
 
     @GetMapping("/{id}")
