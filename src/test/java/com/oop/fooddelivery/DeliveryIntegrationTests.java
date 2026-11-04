@@ -45,17 +45,58 @@ class DeliveryIntegrationTests {
                 + "&deliveryAddress=Colombo&deliveryDate=2026-10-09&deliveryStatus=Pending";
     }
 
+
     @Test
     void pagesAndAssetsRenderUnderContextPath() throws Exception {
-        for (String path : new String[]{"/", "/dashboard", "/customer", "/customer/add", "/customer/edit",
-                "/restaurant", "/restaurant/add", "/restaurant/edit", "/food", "/food/add", "/food/edit",
-                "/delivery", "/delivery/add", "/css/dashboard.css", "/css/style.css"}) {
-            assertEquals(200, request("GET", path, "").statusCode(), path);
+
+        // Test pages that do not require an existing database ID.
+        String[] paths = {
+                "/",
+                "/dashboard",
+                "/customer",
+                "/customer/add",
+                "/restaurant",
+                "/restaurant/add",
+                "/food",
+                "/food/add",
+                "/delivery",
+                "/delivery/add",
+                "/css/dashboard.css",
+                "/css/style.css"
+        };
+
+        for (String path : paths) {
+            HttpResponse<String> response = request("GET", path, "");
+
+            assertEquals(
+                    200,
+                    response.statusCode(),
+                    "Failed to load: " + path
+            );
         }
-        assertTrue(request("GET", "/dashboard", "").body().contains("href=\"/foodflow/delivery\""));
-        assertTrue(request("GET", "/delivery/add", "").body().contains("action=\"/foodflow/delivery/add\""));
-        assertTrue(request("GET", "/food", "").body().contains("Food Item List"));
+
+        // Verify navigation works under the /foodflow context path.
+        assertTrue(
+                request("GET", "/dashboard", "")
+                        .body()
+                        .contains("href=\"/foodflow/delivery\"")
+        );
+
+        // Verify the delivery form uses the correct URL.
+        assertTrue(
+                request("GET", "/delivery/add", "")
+                        .body()
+                        .contains("action=\"/foodflow/delivery/add\"")
+        );
+
+        // Verify the Food Management page renders.
+        assertTrue(
+                request("GET", "/food", "")
+                        .body()
+                        .contains("Food Item List")
+        );
     }
+
 
     @Test
     void createEditAndDeleteDelivery() throws Exception {
