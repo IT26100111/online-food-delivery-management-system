@@ -4,6 +4,7 @@ package com.oop.fooddelivery.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 
 @Entity
@@ -45,11 +46,14 @@ public class Delivery {
     )
     private String deliveryStatus;
 
-    // Empty constructor
+    // Link delivery to a registered driver account
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "driver_id")
+    private DriverAccount driver;
+
     public Delivery() {
     }
 
-    // Constructor
     public Delivery(Long orderId,
                     String deliveryPersonName,
                     String phoneNumber,
@@ -64,8 +68,6 @@ public class Delivery {
         this.deliveryDate = deliveryDate;
         this.deliveryStatus = deliveryStatus;
     }
-
-    // Getters and Setters
 
     public Long getDeliveryId() {
         return deliveryId;
@@ -121,5 +123,13 @@ public class Delivery {
 
     public void setDeliveryStatus(String deliveryStatus) {
         this.deliveryStatus = deliveryStatus;
+    }
+
+    public DriverAccount getDriver() {
+        return driver;
+    }
+
+    public void setDriver(DriverAccount driver) {
+        this.driver = driver;
     }
 }
