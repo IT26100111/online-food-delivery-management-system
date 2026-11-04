@@ -1,3 +1,4 @@
+
 package com.oop.fooddelivery.service;
 
 import com.oop.fooddelivery.model.Delivery;
@@ -20,9 +21,14 @@ public class DeliveryService {
         return deliveryRepository.save(delivery);
     }
 
-    // READ - get all deliveries
+    // READ - get all deliveries for Admin
     public List<Delivery> getAllDeliveries() {
         return deliveryRepository.findAll();
+    }
+
+    // READ - get deliveries assigned to a specific Driver
+    public List<Delivery> getDeliveriesForDriver(String email) {
+        return deliveryRepository.findByDriver_Email(email);
     }
 
     // READ - get one delivery
