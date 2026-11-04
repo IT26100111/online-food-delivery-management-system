@@ -98,4 +98,20 @@ public class DeliveryController {
 
         return "redirect:/delivery";
     }
+
+
+    @GetMapping("/tracking/{id}")
+    public String showTrackingMap(@PathVariable Long id, Model model) {
+
+        Delivery delivery = deliveryService.getDeliveryById(id);
+
+        if (delivery == null) {
+            return "redirect:/delivery";
+        }
+
+        model.addAttribute("delivery", delivery);
+
+        return "delivery/tracking-map";
+    }
+
 }
