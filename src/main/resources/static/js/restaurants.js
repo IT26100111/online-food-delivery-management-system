@@ -35,83 +35,46 @@ document.addEventListener(
            FILTER RESTAURANTS
         ============================================= */
 
-        function filterRestaurants() {
 
-            const searchValue =
-                searchInput.value
-                    .trim()
-                    .toLowerCase();
+function filterRestaurants() {
 
+    const searchValue = searchInput.value
+        .trim()
+        .toLowerCase();
 
-            let visibleCount =
-                0;
+    let visibleCount = 0;
 
+    restaurantItems.forEach(item => {
 
-            restaurantItems.forEach(
-                item => {
+        const category = (
+            item.dataset.category || ""
+        ).trim().toLowerCase();
 
-                    const category =
-                        item.dataset.category;
+        const searchText = (
+            item.dataset.name || ""
+        ).trim().toLowerCase();
 
+        const matchesFilter =
+            activeFilter === "all" ||
+            category === activeFilter.toLowerCase();
 
-                    const restaurantName =
-                        item.dataset.name;
+        const matchesSearch =
+            searchText.includes(searchValue);
 
+        const shouldShow =
+            matchesFilter && matchesSearch;
 
-                    const matchesFilter =
-                        activeFilter === "all"
-                        ||
-                        category === activeFilter;
+        item.style.display = shouldShow ? "" : "none";
 
-
-                    const matchesSearch =
-                        restaurantName
-                            .includes(
-                                searchValue
-                            );
-
-
-                    if (
-                        matchesFilter
-                        &&
-                        matchesSearch
-                    ) {
-
-                        item.style.display =
-                            "";
-
-                        visibleCount++;
-
-                    }
-
-                    else {
-
-                        item.style.display =
-                            "none";
-
-                    }
-
-                }
-            );
-
-
-            if (
-                visibleCount === 0
-            ) {
-
-                emptyState.style.display =
-                    "block";
-
-            }
-
-            else {
-
-                emptyState.style.display =
-                    "none";
-
-            }
-
+        if (shouldShow) {
+            visibleCount++;
         }
+    });
+
+    emptyState.style.display =
+        visibleCount === 0 ? "block" : "none";
+}
+
 
 
 

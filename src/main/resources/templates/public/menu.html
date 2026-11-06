@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${selectedRestaurant != null ? selectedRestaurant.restaurantName + ' Menu | FoodFlow' : 'Food Menu | FoodFlow'}">Food Menu | FoodFlow</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+    <link rel="stylesheet" th:href="@{/css/public-pages.css}" href="/css/public-pages.css">
+
+    <style>
+        .menu-hero { padding-bottom: 64px; }
+        .menu-hero .menu-breadcrumb { color: var(--muted); margin-bottom: 17px; font-size: 13px; }
+        .menu-hero .menu-breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 700; }
+        .menu-hero .menu-breadcrumb i { padding: 0 9px; font-size: 10px; }
+        .menu-restaurants { padding: 19px 0; background: white; border-bottom: 1px solid var(--border); }
+        .menu-restaurants .menu-switcher { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; }
+        .menu-switcher-label { font-size: 12px; color: var(--muted); font-weight: 700; margin-right: 8px; }
+        .menu-switcher a { display: inline-flex; align-items: center; gap: 7px; color: var(--charcoal); text-decoration: none; font-size: 12px; font-weight: 700; border: 1px solid var(--border); padding: 10px 14px; border-radius: 9px; background: white; transition: .2s ease; }
+        .menu-switcher a:hover, .menu-switcher a.active { background: var(--charcoal); border-color: var(--charcoal); color: white; }
+        .menu-content { padding: 64px 0 100px; background: white; min-height: 370px; }
+        .menu-section-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 30px; }
+        .menu-section-top h2 { font-size: clamp(28px,4vw,40px); font-weight: 800; color: var(--charcoal); letter-spacing: -.04em; margin: 0 0 6px; }
+        .menu-section-top p { color: var(--muted); margin: 0; font-size: 14px; }
+        .menu-count { border-radius: 9px; background: var(--cream); padding: 9px 13px; font-size: 12px; font-weight: 700; color: var(--charcoal); white-space: nowrap; }
+        .menu-card { height: 100%; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: #fff; transition: transform .25s ease, box-shadow .25s ease; }
+        .menu-card:hover { transform: translateY(-4px); box-shadow: 0 16px 35px rgba(38,33,27,.08); }
+        .menu-card-image { height: 220px; background: linear-gradient(130deg,#f8e9d8,#f9f3ea); position: relative; }
+        .menu-card-image img { height: 100%; width: 100%; object-fit: cover; }
+        .menu-image-placeholder { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; color: var(--primary); font-size: 53px; }
+        .menu-category { position: absolute; top: 13px; left: 13px; background: rgba(255,255,255,.94); padding: 7px 11px; border-radius: 7px; font-size: 11px; font-weight: 800; color: var(--charcoal); }
+        .menu-card-body { padding: 20px; }
+        .menu-food-name { font-size: 20px; font-weight: 800; color: var(--charcoal); margin: 0 0 6px; }
+        .menu-restaurant-name { font-size: 12px; color: var(--muted); margin-bottom: 15px; }
+        .menu-description { color: var(--muted); font-size: 13px; line-height: 1.75; min-height: 48px; margin-bottom: 18px; }
+        .menu-card-footer { border-top: 1px solid var(--border); padding-top: 15px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .menu-price { color: var(--primary); font-size: 18px; font-weight: 800; }
+        .menu-available { color: var(--green); font-size: 11px; font-weight: 700; }
+        .menu-available i { margin-right: 5px; }
+        .menu-empty { text-align: center; padding: 55px 18px; background: var(--cream); border-radius: 14px; }
+        .menu-empty i { color: var(--primary); font-size: 33px; margin-bottom: 15px; }
+        .menu-empty h3 { color: var(--charcoal); font-weight: 800; font-size: 23px; }
+        .menu-empty p { color: var(--muted); font-size: 14px; margin: 9px 0 19px; }
+        .menu-empty a { text-decoration: none; display: inline-block; background: var(--charcoal); color: white; font-weight: 700; font-size: 13px; border-radius: 8px; padding: 12px 18px; }
+        @media(max-width: 767px) { .menu-section-top { align-items: flex-start; flex-direction: column; } .menu-restaurants .menu-switcher { gap: 7px; } .menu-switcher-label { width: 100%; } .menu-content { padding: 45px 0 80px; } }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <div class="container">
+        <a class="brand-logo" th:href="@{/}" href="/">
+            <span class="brand-mark"><i class="fa-solid fa-bowl-food"></i></span>
+            <span>FoodFlow</span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
+            <ul class="navbar-nav align-items-lg-center gap-lg-1">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/restaurants}" href="/restaurants">Restaurants</a></li>
+                <li class="nav-item"><a class="nav-link active" th:href="@{/menu}" href="/menu">Food</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/recommendations}" href="/recommendations">Recommendations</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/track-order}" href="/track-order">Track Order</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/about}" href="/about">About</a></li>
+                <li class="nav-item"><a class="btn-main btn-nav ms-lg-2" th:href="@{/login}" href="/login"><i class="fa-regular fa-user me-2"></i>Sign In</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <section class="public-page-hero menu-hero">
+        <div class="container">
+            <div class="menu-breadcrumb">
+                <a th:href="@{/restaurants}" href="/restaurants">Restaurants</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span th:text="${selectedRestaurant != null ? selectedRestaurant.restaurantName : 'All Food'}">All Food</span>
+            </div>
+            <span class="eyebrow" th:text="${selectedRestaurant != null ? selectedRestaurant.cuisineType : 'Explore the Menu'}">Explore the Menu</span>
+            <h1>
+                <th:block th:if="${selectedRestaurant != null}">
+                    <span th:text="${selectedRestaurant.restaurantName}">Restaurant</span><br>Menu
+                </th:block>
+                <th:block th:unless="${selectedRestaurant != null}">
+                    Fresh food.<br><span>Great choices.</span>
+                </th:block>
+            </h1>
+            <p th:if="${selectedRestaurant != null}">
+                <i class="fa-solid fa-location-dot me-2"></i>
+                <span th:text="${selectedRestaurant.address}">Restaurant address</span>
+            </p>
+            <p th:unless="${selectedRestaurant != null}">Discover available dishes from FoodFlow's active restaurants. Choose a restaurant to see its menu.</p>
+        </div>
+    </section>
+
+    <section class="menu-restaurants">
+        <div class="container">
+            <div class="menu-switcher">
+                <span class="menu-switcher-label">Choose restaurant:</span>
+                <a th:href="@{/menu}" href="/menu" th:classappend="${selectedRestaurant == null} ? 'active' : ''">All Food</a>
+                <a th:each="restaurant : ${restaurants}"
+                   th:href="@{/menu(restaurantId=${restaurant.restaurantId})}"
+                   th:text="${restaurant.restaurantName}"
+                   th:classappend="${selectedRestaurant != null and selectedRestaurant.restaurantId == restaurant.restaurantId} ? 'active' : ''"
+                   href="/menu?restaurantId=1">Restaurant</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="menu-content">
+        <div class="container">
+            <div class="menu-section-top">
+                <div>
+                    <span class="eyebrow">Available to order</span>
+                    <h2 th:text="${selectedRestaurant != null ? 'Our Menu' : 'Explore Food'}">Explore Food</h2>
+                    <p>Fresh selections from active FoodFlow restaurants.</p>
+                </div>
+                <span class="menu-count" th:text="${#lists.size(foodItems)} + ' items available'">0 items available</span>
+            </div>
+
+            <div class="row g-4" th:if="${not #lists.isEmpty(foodItems)}">
+                <div class="col-lg-4 col-md-6" th:each="food : ${foodItems}">
+                    <article class="menu-card">
+                        <div class="menu-card-image">
+                            <img th:if="${food.imageUrl != null and !#strings.isEmpty(food.imageUrl)}"
+                                 th:src="${food.imageUrl}" th:alt="${food.foodName}" alt="Food item">
+                            <div class="menu-image-placeholder" th:unless="${food.imageUrl != null and !#strings.isEmpty(food.imageUrl)}">
+                                <i class="fa-solid fa-bowl-food" aria-hidden="true"></i>
+                            </div>
+                            <span class="menu-category" th:text="${food.category}">Category</span>
+                        </div>
+                        <div class="menu-card-body">
+                            <h3 class="menu-food-name" th:text="${food.foodName}">Food Name</h3>
+                            <div class="menu-restaurant-name">
+                                <i class="fa-solid fa-store me-1"></i>
+                                <span th:text="${food.restaurantName}">Restaurant</span>
+                            </div>
+                            <p class="menu-description" th:text="${food.description}">Food description</p>
+                            <div class="menu-card-footer">
+                                <span class="menu-price" th:text="${'Rs. ' + #numbers.formatDecimal(food.price, 1, 'COMMA', 2, 'POINT')}">Rs. 0.00</span>
+                                <span class="menu-available"><i class="fa-solid fa-circle-check"></i> Available</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="menu-empty" th:if="${#lists.isEmpty(foodItems)}">
+                <i class="fa-solid fa-utensils"></i>
+                <h3>No available food items</h3>
+                <p th:text="${selectedRestaurant != null ? 'This restaurant has no available dishes at the moment.' : 'There are no available dishes yet. Please check back later.'}">
+                    Please check back later.
+                </p>
+                <a th:href="@{/restaurants}" href="/restaurants">Browse Restaurants</a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand-column">
+                <a class="footer-brand" th:href="@{/}" href="/"><i class="fa-solid fa-bowl-food"></i> FoodFlow</a>
+                <p>Great food from local restaurants, delivered simply and reliably.</p>
+            </div>
+            <div><h6>Explore</h6><a th:href="@{/}" href="/">Home</a><a th:href="@{/restaurants}" href="/restaurants">Restaurants</a><a th:href="@{/menu}" href="/menu">Food</a></div>
+            <div><h6>Support</h6><a th:href="@{/track-order}" href="/track-order">Track Order</a><a th:href="@{/about}" href="/about">About</a></div>
+            <div><h6>Account</h6><a th:href="@{/login}" href="/login">Sign In</a></div>
+        </div>
+        <div class="footer-bottom"><p>© 2026 FoodFlow. All rights reserved.</p><p>Online Food Delivery Management System</p></div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

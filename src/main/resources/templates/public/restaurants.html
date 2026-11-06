@@ -213,8 +213,8 @@
 
           <p>
 
-            Discover restaurants around you,
-            compare delivery times and find the
+            Discover restaurants on FoodFlow,
+            explore cuisines and find the
             right meal for today.
 
           </p>
@@ -260,58 +260,41 @@
 
     <div class="container">
 
-      <div class="public-filter-row">
 
+        <div class="public-filter-row">
 
-        <button class="public-filter active"
-                data-filter="all">
+            <button class="public-filter active"
+                    type="button"
+                    data-filter="all">
+                All Restaurants
+            </button>
 
-          All Restaurants
+            <button class="public-filter"
+                    type="button"
+                    data-filter="Sri Lankan">
+                Sri Lankan
+            </button>
 
-        </button>
+            <button class="public-filter"
+                    type="button"
+                    data-filter="Fast Food">
+                Fast Food
+            </button>
 
+            <button class="public-filter"
+                    type="button"
+                    data-filter="Italian">
+                Italian
+            </button>
 
-        <button class="public-filter"
-                data-filter="asian">
+            <button class="public-filter"
+                    type="button"
+                    data-filter="Chinese">
+                Chinese
+            </button>
 
-          Asian
+        </div>
 
-        </button>
-
-
-        <button class="public-filter"
-                data-filter="pizza">
-
-          Pizza
-
-        </button>
-
-
-        <button class="public-filter"
-                data-filter="healthy">
-
-          Healthy
-
-        </button>
-
-
-        <button class="public-filter"
-                data-filter="fast-food">
-
-          Fast Food
-
-        </button>
-
-
-        <button class="public-filter"
-                data-filter="dessert">
-
-          Desserts
-
-        </button>
-
-
-      </div>
 
     </div>
 
@@ -333,763 +316,86 @@
         <div>
 
                     <span class="eyebrow">
-                        Popular near you
+                        Explore FoodFlow
                     </span>
 
 
           <h2>
-            Restaurants people keep coming back to
+            Discover restaurants on FoodFlow
           </h2>
 
 
           <p>
-
-            Well-rated places with reliable delivery
-            and popular menu choices.
-
+            Explore active restaurants available on FoodFlow.
+            Browse by cuisine or search for your favourites.
           </p>
 
         </div>
 
 
         <div class="restaurant-sort">
-
-          <label for="sortRestaurants">
-            Sort by
-          </label>
-
-
-          <select id="sortRestaurants">
-
-            <option>
-              Recommended
-            </option>
-
-            <option>
-              Highest Rated
-            </option>
-
-            <option>
-              Fastest Delivery
-            </option>
-
-            <option>
-              Lowest Delivery Fee
-            </option>
-
-          </select>
-
+          <span th:text="${#lists.size(restaurants)} + ' restaurants available'">
+            Restaurants available
+          </span>
         </div>
 
       </div>
 
 
 
-      <div class="row g-4"
-           id="restaurantGrid">
+      <div class="row g-4" id="restaurantGrid">
 
-
-        <!-- RESTAURANT 1 -->
-
+        <!-- One card per active Restaurant supplied by PublicPageController -->
         <div class="col-lg-4 col-md-6 restaurant-item"
-             data-category="healthy"
-             data-name="green bowl kitchen">
-
+             th:each="restaurant : ${restaurants}"
+             th:attr="data-category=${restaurant.cuisineType},
+                      data-name=${restaurant.restaurantName + ' ' + restaurant.cuisineType}">
 
           <article class="restaurant-discovery-card">
 
+            <!-- Restaurant has no image field yet; use a neutral placeholder. -->
+            <div class="restaurant-image"
+                 style="background: linear-gradient(135deg, #e8f7ee, #c5ebd4);
+                        display: flex; justify-content: center;
+                        align-items: center; min-height: 210px;">
 
-            <div class="restaurant-image">
+              <i class="fa-solid fa-utensils"
+                 style="font-size: 65px; color: #25834d;"
+                 aria-hidden="true"></i>
 
-              <img
-                      src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=900&auto=format&fit=crop"
-                      alt="Green Bowl Kitchen">
-
-
-              <span class="restaurant-tag">
-                                Top Rated
-                            </span>
-
-
-              <button class="restaurant-favourite"
-                      type="button">
-
-                <i class="fa-regular fa-heart"></i>
-
-              </button>
-
+              <span class="restaurant-tag"
+                    th:text="${restaurant.cuisineType}">Cuisine</span>
             </div>
 
-
             <div class="restaurant-discovery-body">
-
-
               <div class="restaurant-title-row">
-
                 <div>
-
-                  <h3>
-                    Green Bowl Kitchen
-                  </h3>
-
-                  <span>
-                                        Healthy • Bowls • Wraps
-                                    </span>
-
+                  <h3 th:text="${restaurant.restaurantName}">Restaurant Name</h3>
+                  <span th:text="${restaurant.cuisineType}">Cuisine Type</span>
                 </div>
-
-
-                <div class="rating-pill">
-
-                  <i class="fa-solid fa-star"></i>
-
-                  4.8
-
-                </div>
-
               </div>
-
 
               <div class="restaurant-details">
-
-                                <span>
-
-                                    <i class="fa-regular fa-clock"></i>
-
-                                    20–30 min
-
-                                </span>
-
-
                 <span>
-
-                                    <i class="fa-solid fa-motorcycle"></i>
-
-                                    Rs. 250
-
-                                </span>
-
-
-                <span>
-
-                                    <i class="fa-solid fa-location-dot"></i>
-
-                                    Colombo
-
-                                </span>
-
+                  <i class="fa-solid fa-location-dot"></i>
+                  <span th:text="${restaurant.address}">Restaurant Address</span>
+                </span>
               </div>
-
 
               <div class="restaurant-card-footer">
+                <!-- Active means listed by admin, not necessarily open right now. -->
+                <span class="open-status"><span></span>Active</span>
 
-                                <span class="open-status">
-
-                                    <span></span>
-
-                                    Open now
-
-                                </span>
-
-
+                <!-- Restaurant-specific menu is implemented in the next step. -->
                 <a href="/menu"
-                   th:href="@{/menu}">
-
+                   th:href="@{/menu(restaurantId=${restaurant.restaurantId})}">
                   View Menu
-
                   <i class="fa-solid fa-arrow-right"></i>
-
                 </a>
-
               </div>
-
             </div>
 
           </article>
-
-        </div>
-
-
-
-        <!-- RESTAURANT 2 -->
-
-        <div class="col-lg-4 col-md-6 restaurant-item"
-             data-category="asian"
-             data-name="street wok">
-
-
-          <article class="restaurant-discovery-card">
-
-
-            <div class="restaurant-image">
-
-              <img
-                      src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=900&auto=format&fit=crop"
-                      alt="Street Wok">
-
-
-              <span class="restaurant-tag">
-                                Fast Delivery
-                            </span>
-
-
-              <button class="restaurant-favourite"
-                      type="button">
-
-                <i class="fa-regular fa-heart"></i>
-
-              </button>
-
-            </div>
-
-
-            <div class="restaurant-discovery-body">
-
-
-              <div class="restaurant-title-row">
-
-                <div>
-
-                  <h3>
-                    Street Wok
-                  </h3>
-
-                  <span>
-                                        Asian • Rice • Noodles
-                                    </span>
-
-                </div>
-
-
-                <div class="rating-pill">
-
-                  <i class="fa-solid fa-star"></i>
-
-                  4.7
-
-                </div>
-
-              </div>
-
-
-              <div class="restaurant-details">
-
-                                <span>
-
-                                    <i class="fa-regular fa-clock"></i>
-
-                                    25–35 min
-
-                                </span>
-
-
-                <span>
-
-                                    <i class="fa-solid fa-motorcycle"></i>
-
-                                    Rs. 200
-
-                                </span>
-
-
-                <span>
-
-                                    <i class="fa-solid fa-location-dot"></i>
-
-                                    Nugegoda
-
-                                </span>
-
-              </div>
-
-
-              <div class="restaurant-card-footer">
-
-                                <span class="open-status">
-
-                                    <span></span>
-
-                                    Open now
-
-                                </span>
-
-
-                <a href="/menu"
-                   th:href="@{/menu}">
-
-                  View Menu
-
-                  <i class="fa-solid fa-arrow-right"></i>
-
-                </a>
-
-              </div>
-
-            </div>
-
-          </article>
-
-        </div>
-
-
-
-        <!-- RESTAURANT 3 -->
-
-        <div class="col-lg-4 col-md-6 restaurant-item"
-             data-category="pizza"
-             data-name="ember pizza co">
-
-
-          <article class="restaurant-discovery-card">
-
-
-            <div class="restaurant-image">
-
-              <img
-                      src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=900&auto=format&fit=crop"
-                      alt="Ember Pizza Co">
-
-
-              <span class="restaurant-tag">
-                                Popular
-                            </span>
-
-
-              <button class="restaurant-favourite"
-                      type="button">
-
-                <i class="fa-regular fa-heart"></i>
-
-              </button>
-
-            </div>
-
-
-            <div class="restaurant-discovery-body">
-
-
-              <div class="restaurant-title-row">
-
-                <div>
-
-                  <h3>
-                    Ember Pizza Co.
-                  </h3>
-
-                  <span>
-                                        Pizza • Italian • Sides
-                                    </span>
-
-                </div>
-
-
-                <div class="rating-pill">
-
-                  <i class="fa-solid fa-star"></i>
-
-                  4.9
-
-                </div>
-
-              </div>
-
-
-              <div class="restaurant-details">
-
-                                <span>
-
-                                    <i class="fa-regular fa-clock"></i>
-
-                                    20–25 min
-
-                                </span>
-
-
-                <span>
-
-                                    <i class="fa-solid fa-motorcycle"></i>
-
-                                    Rs. 300
-
-                                </span>
-
-
-                <span>
-
-                                    <i class="fa-solid fa-location-dot"></i>
-
-                                    Rajagiriya
-
-                                </span>
-
-              </div>
-
-
-              <div class="restaurant-card-footer">
-
-                                <span class="open-status">
-
-                                    <span></span>
-
-                                    Open now
-
-                                </span>
-
-
-                <a href="/menu"
-                   th:href="@{/menu}">
-
-                  View Menu
-
-                  <i class="fa-solid fa-arrow-right"></i>
-
-                </a>
-
-              </div>
-
-            </div>
-
-          </article>
-
-        </div>
-
-
-
-        <!-- RESTAURANT 4 -->
-
-        <div class="col-lg-4 col-md-6 restaurant-item"
-             data-category="fast-food"
-             data-name="burger yard">
-
-
-          <article class="restaurant-discovery-card">
-
-
-            <div class="restaurant-image">
-
-              <img
-                      src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=900&auto=format&fit=crop"
-                      alt="Burger Yard">
-
-
-              <span class="restaurant-tag">
-                                Customer Favourite
-                            </span>
-
-
-              <button class="restaurant-favourite"
-                      type="button">
-
-                <i class="fa-regular fa-heart"></i>
-
-              </button>
-
-            </div>
-
-
-            <div class="restaurant-discovery-body">
-
-
-              <div class="restaurant-title-row">
-
-                <div>
-
-                  <h3>
-                    Burger Yard
-                  </h3>
-
-                  <span>
-                                        Burgers • Fries • Drinks
-                                    </span>
-
-                </div>
-
-
-                <div class="rating-pill">
-
-                  <i class="fa-solid fa-star"></i>
-
-                  4.6
-
-                </div>
-
-              </div>
-
-
-              <div class="restaurant-details">
-
-                                <span>
-                                    <i class="fa-regular fa-clock"></i>
-                                    15–25 min
-                                </span>
-
-
-                <span>
-                                    <i class="fa-solid fa-motorcycle"></i>
-                                    Rs. 180
-                                </span>
-
-
-                <span>
-                                    <i class="fa-solid fa-location-dot"></i>
-                                    Kotte
-                                </span>
-
-              </div>
-
-
-              <div class="restaurant-card-footer">
-
-                                <span class="open-status">
-
-                                    <span></span>
-
-                                    Open now
-
-                                </span>
-
-
-                <a href="/menu"
-                   th:href="@{/menu}">
-
-                  View Menu
-
-                  <i class="fa-solid fa-arrow-right"></i>
-
-                </a>
-
-              </div>
-
-            </div>
-
-          </article>
-
-        </div>
-
-
-
-        <!-- RESTAURANT 5 -->
-
-        <div class="col-lg-4 col-md-6 restaurant-item"
-             data-category="dessert"
-             data-name="sweet room">
-
-
-          <article class="restaurant-discovery-card">
-
-
-            <div class="restaurant-image">
-
-              <img
-                      src="https://images.unsplash.com/photo-1551024506-0bccd828d307?q=80&w=900&auto=format&fit=crop"
-                      alt="Sweet Room">
-
-
-              <span class="restaurant-tag">
-                                Sweet Pick
-                            </span>
-
-
-              <button class="restaurant-favourite"
-                      type="button">
-
-                <i class="fa-regular fa-heart"></i>
-
-              </button>
-
-            </div>
-
-
-            <div class="restaurant-discovery-body">
-
-
-              <div class="restaurant-title-row">
-
-                <div>
-
-                  <h3>
-                    Sweet Room
-                  </h3>
-
-                  <span>
-                                        Desserts • Cakes • Drinks
-                                    </span>
-
-                </div>
-
-
-                <div class="rating-pill">
-
-                  <i class="fa-solid fa-star"></i>
-
-                  4.8
-
-                </div>
-
-              </div>
-
-
-              <div class="restaurant-details">
-
-                                <span>
-                                    <i class="fa-regular fa-clock"></i>
-                                    20–30 min
-                                </span>
-
-
-                <span>
-                                    <i class="fa-solid fa-motorcycle"></i>
-                                    Rs. 220
-                                </span>
-
-
-                <span>
-                                    <i class="fa-solid fa-location-dot"></i>
-                                    Colombo
-                                </span>
-
-              </div>
-
-
-              <div class="restaurant-card-footer">
-
-                                <span class="open-status">
-
-                                    <span></span>
-
-                                    Open now
-
-                                </span>
-
-
-                <a href="/menu"
-                   th:href="@{/menu}">
-
-                  View Menu
-
-                  <i class="fa-solid fa-arrow-right"></i>
-
-                </a>
-
-              </div>
-
-            </div>
-
-          </article>
-
-        </div>
-
-
-
-        <!-- RESTAURANT 6 -->
-
-        <div class="col-lg-4 col-md-6 restaurant-item"
-             data-category="asian"
-             data-name="ceylon kitchen">
-
-
-          <article class="restaurant-discovery-card">
-
-
-            <div class="restaurant-image">
-
-              <img
-                      src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?q=80&w=900&auto=format&fit=crop"
-                      alt="Ceylon Kitchen">
-
-
-              <span class="restaurant-tag">
-                                Local Favourite
-                            </span>
-
-
-              <button class="restaurant-favourite"
-                      type="button">
-
-                <i class="fa-regular fa-heart"></i>
-
-              </button>
-
-            </div>
-
-
-            <div class="restaurant-discovery-body">
-
-
-              <div class="restaurant-title-row">
-
-                <div>
-
-                  <h3>
-                    Ceylon Kitchen
-                  </h3>
-
-                  <span>
-                                        Sri Lankan • Rice • Curry
-                                    </span>
-
-                </div>
-
-
-                <div class="rating-pill">
-
-                  <i class="fa-solid fa-star"></i>
-
-                  4.9
-
-                </div>
-
-              </div>
-
-
-              <div class="restaurant-details">
-
-                                <span>
-                                    <i class="fa-regular fa-clock"></i>
-                                    25–35 min
-                                </span>
-
-
-                <span>
-                                    <i class="fa-solid fa-motorcycle"></i>
-                                    Rs. 200
-                                </span>
-
-
-                <span>
-                                    <i class="fa-solid fa-location-dot"></i>
-                                    Battaramulla
-                                </span>
-
-              </div>
-
-
-              <div class="restaurant-card-footer">
-
-                                <span class="open-status">
-
-                                    <span></span>
-
-                                    Open now
-
-                                </span>
-
-
-                <a href="/menu"
-                   th:href="@{/menu}">
-
-                  View Menu
-
-                  <i class="fa-solid fa-arrow-right"></i>
-
-                </a>
-
-              </div>
-
-            </div>
-
-          </article>
-
         </div>
 
       </div>
