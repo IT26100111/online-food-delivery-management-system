@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta name="referrer" content="no-referrer">
+    <title>Review Your Order | FoodFlow</title>
+    <!-- All assets are local: the private token is not shared with external CDNs. -->
+    <style>
+        :root { color-scheme: light; --orange: #fa6536; --ink: #1e293b; --muted: #64748b; --line: #e6e9ee; }
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: #fbf7f2; color: var(--ink); }
+        header { background: #fff; border-bottom: 1px solid var(--line); }
+        .nav { max-width: 930px; margin: auto; padding: 21px 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+        .brand { text-decoration: none; color: var(--ink); font-size: 25px; font-weight: 800; letter-spacing: -1px; }
+        .brand span { color: var(--orange); }
+        .back { color: var(--muted); font-size: 13px; text-decoration: none; }
+        .back:hover { color: var(--orange); }
+        main { max-width: 700px; margin: 72px auto 90px; padding: 0 20px; }
+        .card { padding: clamp(25px, 5vw, 48px); background: #fff; border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 15px 50px rgba(25, 35, 48, .055); }
+        .eyebrow { font-size: 11px; color: var(--orange); font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; }
+        h1 { font-size: clamp(29px, 5vw, 40px); margin: 12px 0; letter-spacing: -1.3px; line-height: 1.14; }
+        .sub { color: var(--muted); line-height: 1.75; font-size: 14px; margin: 0 0 28px; }
+        .order-summary { display: flex; flex-wrap: wrap; gap: 8px 20px; background: #fff7ef; border: 1px solid #f6e5d5; border-radius: 12px; padding: 15px 18px; font-size: 13px; margin: 24px 0; }
+        .order-summary span { color: #9b5835; }
+        .order-summary strong { color: var(--ink); }
+        .notice { padding: 17px 19px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; color: #334155; line-height: 1.7; font-size: 14px; margin: 22px 0; }
+        .notice.error { background: #fff4f2; border-color: #ffc9c1; color: #a83227; }
+        .notice.success { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+        label { display: block; font-weight: 750; font-size: 14px; margin: 21px 0 9px; }
+        select, textarea { width: 100%; background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 14px; color: var(--ink); font: inherit; }
+        select:focus, textarea:focus { outline: 3px solid #ffd7c5; border-color: var(--orange); }
+        textarea { min-height: 145px; resize: vertical; }
+        .help { color: var(--muted); font-size: 12px; margin: 7px 0 0; }
+        button { width: 100%; margin-top: 26px; padding: 16px 20px; background: var(--orange); color: #fff; border: 0; border-radius: 10px; font: inherit; font-weight: 800; cursor: pointer; }
+        button:hover { background: #dc5429; }
+        .footer-note { margin: 26px 0 0; color: var(--muted); font-size: 12px; line-height: 1.7; text-align: center; }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="nav" aria-label="Main navigation">
+        <a class="brand" th:href="@{/}">Food<span>Flow</span></a>
+        <a class="back" th:href="@{/restaurants}">Back to restaurants</a>
+    </nav>
+</header>
+<main>
+    <section class="card">
+        <span class="eyebrow">FoodFlow Reviews</span>
+
+        <div th:if="${submitted}">
+            <h1>Thanks for your feedback!</h1>
+            <p class="sub">Your review has been saved successfully.</p>
+            <div class="notice success" role="status">Your rating and review have been recorded.</div>
+        </div>
+
+        <div th:if="${invalidLink}">
+            <h1>This review link is unavailable</h1>
+            <div class="notice error" role="alert">The private link is invalid or has expired. Please use the original link you saved at checkout.</div>
+        </div>
+
+        <div th:if="${pending == true or cancelled == true or alreadyReviewed == true or canReview == true}">
+            <h1>Review your order</h1>
+            <p class="sub">Share your experience with FoodFlow after your order is delivered.</p>
+
+            <div class="order-summary">
+                <div><span>Order </span><strong th:text="${'#' + orderId}">#123</strong></div>
+                <div><span>Restaurant </span><strong th:text="${restaurantName}">Restaurant</strong></div>
+            </div>
+
+            <div class="notice" th:if="${pending}" role="status">
+                Your order hasn't been delivered yet. Keep this private link and return once the delivery is complete.
+            </div>
+
+            <div class="notice error" th:if="${cancelled}" role="status">
+                This order was cancelled and is not eligible for feedback.
+            </div>
+
+            <div class="notice success" th:if="${alreadyReviewed}" role="status">
+                Feedback has already been submitted for this order. Only one review is allowed per order.
+            </div>
+
+            <form th:if="${canReview}" method="post" th:action="@{/review}">
+                <!-- The Order ID is not accepted from the browser; it is
+                     always derived from the validated private token. -->
+                <input type="hidden" name="token" th:value="${token}">
+
+                <div class="notice error" th:if="${formError}" role="alert" th:text="${formError}">
+                    Please check your review.
+                </div>
+
+                <label for="rating">Your rating</label>
+                <select id="rating" name="rating" required>
+                    <option value="" selected disabled>Select a rating</option>
+                    <option th:each="score : ${#numbers.sequence(5, 1)}"
+                            th:value="${score}"
+                            th:selected="${enteredRating != null and enteredRating == score.toString()}"
+                            th:text="${score == 5 ? '5 - Excellent' : (score == 4 ? '4 - Good' : (score == 3 ? '3 - Average' : (score == 2 ? '2 - Poor' : '1 - Very Poor')))}">
+                        5 - Excellent
+                    </option>
+                </select>
+
+                <label for="reviewMessage">Your review</label>
+                <textarea id="reviewMessage" name="reviewMessage" required maxlength="1000"
+                          placeholder="Tell us how your food and delivery experience went..."
+                          th:text="${enteredMessage}"></textarea>
+                <p class="help">Maximum 1,000 characters. You can submit one review for this order.</p>
+                <button type="submit">Submit review</button>
+            </form>
+        </div>
+    </section>
+    <p class="footer-note">This is a private link. Please do not share it with others.</p>
+</main>
+</body>
+</html>

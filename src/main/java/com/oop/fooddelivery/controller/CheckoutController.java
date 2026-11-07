@@ -13,6 +13,7 @@ import com.oop.fooddelivery.service.OrderService;
 import com.oop.fooddelivery.service.PaymentService;
 import com.oop.fooddelivery.service.RestaurantOperations;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -129,17 +130,24 @@ public class CheckoutController {
         }
 
         try {
-            // CheckoutService saves Customer, Order, OrderItems AND Payment.
-            Order savedOrder = checkoutService.placeOrderWithPayment(
-                    cart,
-                    checkoutForm,
-                    selectedMethod
-            );
+            // CheckoutService saves Customer, Order, OrderItems, Payment
+            // and the private review token in a single transaction.
+            CheckoutService.CheckoutWithReviewToken result =
+                    checkoutService.placeOrderWithPaymentAndReviewToken(
+                            cart,
+                            checkoutForm,
+                            selectedMethod
+                    );
 
-            // Keep the existing session-scoped confirmation workflow.
+            // Keep the confirmation and the raw token in this browser
+            // session only. Do not write the raw token to the database.
             session.setAttribute(
                     "checkoutConfirmedOrderId",
-                    savedOrder.getOrderId()
+                    result.order().getOrderId()
+            );
+            session.setAttribute(
+                    "checkoutReviewToken",
+                    result.reviewToken()
             );
 
             // Clear only after the transactional checkout succeeds.
@@ -153,7 +161,15 @@ public class CheckoutController {
     }
 
     @GetMapping("/success")
-    public String orderSuccess(HttpSession session, Model model) {
+    public String orderSuccess(
+            HttpSession session,
+            HttpServletResponse response,
+            Model model) {
+
+        // Confirmation includes a private bearer link; do not cache it.
+        response.setHeader("Cache-Control", "no-store");
+        response.setHeader("Referrer-Policy", "no-referrer");
+
         Object storedId = session.getAttribute("checkoutConfirmedOrderId");
 
         if (!(storedId instanceof Long orderId)) {
@@ -163,6 +179,7 @@ public class CheckoutController {
         Order order = orderService.getOrderById(orderId);
         if (order == null) {
             session.removeAttribute("checkoutConfirmedOrderId");
+            session.removeAttribute("checkoutReviewToken");
             return "redirect:/menu";
         }
 
@@ -172,6 +189,7 @@ public class CheckoutController {
 
         model.addAttribute("order", order);
         model.addAttribute("payment", payment);
+        model.addAttribute("reviewToken", session.getAttribute("checkoutReviewToken"));
         return "public/order-confirmation";
     }
 

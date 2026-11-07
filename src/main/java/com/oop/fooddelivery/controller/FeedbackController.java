@@ -41,21 +41,33 @@ public class FeedbackController {
     }
 
     // CREATE: Display add feedback form
+
     @GetMapping("/add")
     public String showAddForm(Model model) {
 
-        List<Order> deliveredOrders = orderService
+        List<Order> eligibleOrders = orderService
                 .getAllOrders()
                 .stream()
+
+                // Only completed orders can receive feedback.
                 .filter(order ->
                         order.getStatus() == OrderStatus.DELIVERED
                 )
+
+                // Exclude orders that already have reviews.
+                .filter(order ->
+                        feedbackService
+                                .getFeedbackByOrderId(order.getOrderId())
+                                .isEmpty()
+                )
+
                 .toList();
 
-        model.addAttribute("orders", deliveredOrders);
+        model.addAttribute("orders", eligibleOrders);
 
         return "feedback/add-feedback";
     }
+
 
     // CREATE: Save new feedback
     @PostMapping("/add")

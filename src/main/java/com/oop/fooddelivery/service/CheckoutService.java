@@ -23,6 +23,7 @@ public class CheckoutService {
     private final FoodItemService foodItemService;
     private final RestaurantOperations restaurantService;
     private final PaymentService paymentService;
+    private final FeedbackAccessTokenService feedbackAccessTokenService;
     private final Validator validator;
 
     public CheckoutService(
@@ -31,6 +32,7 @@ public class CheckoutService {
             FoodItemService foodItemService,
             RestaurantOperations restaurantService,
             PaymentService paymentService,
+            FeedbackAccessTokenService feedbackAccessTokenService,
             Validator validator) {
 
         this.customerService = customerService;
@@ -38,6 +40,7 @@ public class CheckoutService {
         this.foodItemService = foodItemService;
         this.restaurantService = restaurantService;
         this.paymentService = paymentService;
+        this.feedbackAccessTokenService = feedbackAccessTokenService;
         this.validator = validator;
     }
 
@@ -189,5 +192,27 @@ public class CheckoutService {
         );
 
         return savedOrder;
+    }
+    // New checkout flow: order, payment and private review token are
+    // persisted together. Any failure rolls back all three records.
+    @Transactional
+    public CheckoutWithReviewToken placeOrderWithPaymentAndReviewToken(
+            ShoppingCart cart,
+            CheckoutForm form,
+            PaymentMethod paymentMethod) {
+
+        // Reuse the existing validated order/payment workflow.
+        Order savedOrder = placeOrderWithPayment(cart, form, paymentMethod);
+
+        // Only the SHA-256 hash is stored in the database.
+        String rawReviewToken =
+                feedbackAccessTokenService.generateTokenForOrder(savedOrder);
+
+        // The raw token is returned only to the checkout controller,
+        // which will put it in the customer's private browser session.
+        return new CheckoutWithReviewToken(savedOrder, rawReviewToken);
+    }
+
+    public record CheckoutWithReviewToken(Order order, String reviewToken) {
     }
 }
