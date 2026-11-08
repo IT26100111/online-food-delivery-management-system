@@ -135,13 +135,15 @@ public class OrderController {
     }
 
 
-    @GetMapping("/delete/{id}")
+
+    @PostMapping("/delete/{id}")
     public String deleteOrder(@PathVariable Long id) {
 
         orderService.deleteOrder(id);
 
         return "redirect:/order";
     }
+
 
     @GetMapping("/{id}/items/add")
     public String showAddItemForm(@PathVariable Long id, Model model){
@@ -202,7 +204,8 @@ public class OrderController {
         return "order/order-details";
     }
 
-    @GetMapping("/{orderId}/items/delete/{itemId}")
+
+    @PostMapping("/{orderId}/items/delete/{itemId}")
     public String deleteOrderItem(
             @PathVariable Long orderId,
             @PathVariable Long itemId) {
@@ -214,4 +217,5 @@ public class OrderController {
 
         return "redirect:/order/" + orderId;
     }
+
 }

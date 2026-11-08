@@ -203,13 +203,12 @@ public class FoodItemController {
 
         return restaurant;
     }
-
-    // Legacy delete route - will be secured separately.
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteFoodItem(@PathVariable Long id) {
 
         foodItemService.deleteFoodItem(id);
 
         return "redirect:/food";
     }
+
 }

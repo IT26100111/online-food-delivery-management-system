@@ -144,6 +144,59 @@
                 </small>
             </section>
 
+
+            <!-- PRIVATE ORDER TRACKING LINK -->
+            <section class="review-access"
+                     th:if="${trackingToken != null}">
+
+                <h2>
+                    <i class="fa-solid fa-truck-fast me-2"
+                       aria-hidden="true"></i>
+                    Track Your Order
+                </h2>
+
+                <p class="mb-3">
+                    Save your private tracking link to check
+                    your order's delivery progress anytime.
+                    Keep this link private.
+                </p>
+
+                <label class="form-label fw-bold"
+                       for="trackingLink">
+                    Your Private Tracking Link
+                </label>
+
+                <div class="input-group mb-2">
+
+                    <input
+                            id="trackingLink"
+                            class="form-control review-input"
+                            type="text"
+                            readonly
+                            aria-label="Private tracking link"
+                            th:value="@{/track-order/secure(token=${trackingToken})}">
+
+                    <button
+                            type="button"
+                            class="btn btn-outline-success review-copy"
+                            id="copyTrackingLink">
+
+                        <i class="fa-regular fa-copy me-1"></i>
+                        Copy Link
+
+                    </button>
+
+                </div>
+
+                <small>
+                    Anyone with this private link can view
+                    your order's tracking status.
+                    The link expires after 90 days.
+                </small>
+
+            </section>
+
+
             <div class="confirm-actions">
                 <a class="confirm-action-primary" th:href="@{/restaurants}" href="/restaurants">
                     <i class="fa-solid fa-store me-2" aria-hidden="true"></i>Browse restaurants
@@ -197,5 +250,45 @@
         });
     }
 </script>
+
+
+<script>
+    const trackingLinkInput =
+        document.getElementById("trackingLink");
+
+    const copyTrackingLinkButton =
+        document.getElementById("copyTrackingLink");
+
+    if (trackingLinkInput && copyTrackingLinkButton) {
+
+        // Convert the relative link into a complete URL.
+        trackingLinkInput.value = new URL(
+            trackingLinkInput.value,
+            window.location.origin
+        ).href;
+
+        copyTrackingLinkButton.addEventListener(
+            "click",
+            async function () {
+
+                try {
+                    await navigator.clipboard.writeText(
+                        trackingLinkInput.value
+                    );
+
+                    copyTrackingLinkButton.textContent =
+                        "Copied!";
+
+                } catch (error) {
+                    trackingLinkInput.select();
+
+                    copyTrackingLinkButton.textContent =
+                        "Select and Copy";
+                }
+            }
+        );
+    }
+</script>
+
 </body>
 </html>

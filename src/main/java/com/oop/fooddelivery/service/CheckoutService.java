@@ -24,8 +24,12 @@ public class CheckoutService {
     private final RestaurantOperations restaurantService;
     private final PaymentService paymentService;
     private final FeedbackAccessTokenService feedbackAccessTokenService;
+    private final OrderTrackingTokenService orderTrackingTokenService;
     private final Validator validator;
 
+    // =========================================
+    // CONSTRUCTOR DEPENDENCY INJECTION
+    // =========================================
     public CheckoutService(
             CustomerService customerService,
             OrderService orderService,
@@ -33,6 +37,7 @@ public class CheckoutService {
             RestaurantOperations restaurantService,
             PaymentService paymentService,
             FeedbackAccessTokenService feedbackAccessTokenService,
+            OrderTrackingTokenService orderTrackingTokenService,
             Validator validator) {
 
         this.customerService = customerService;
@@ -41,12 +46,12 @@ public class CheckoutService {
         this.restaurantService = restaurantService;
         this.paymentService = paymentService;
         this.feedbackAccessTokenService = feedbackAccessTokenService;
+        this.orderTrackingTokenService = orderTrackingTokenService;
         this.validator = validator;
     }
 
     // =========================================
     // EXISTING CHECKOUT METHOD
-    // Retained until the Controller is migrated.
     // =========================================
     @Transactional
     public Order placeOrder(
@@ -148,11 +153,14 @@ public class CheckoutService {
         Order order = new Order();
 
         order.setCustomer(customer);
+
         order.setRestaurantName(
                 restaurant.getRestaurantName()
         );
+
         order.setOrderDate(LocalDate.now());
         order.setStatus(OrderStatus.PENDING);
+
         order.setDeliveryAddress(
                 form.getDeliveryAddress().trim()
         );
@@ -167,7 +175,7 @@ public class CheckoutService {
     }
 
     // =========================================
-    // NEW: CHECKOUT WITH PAYMENT
+    // CHECKOUT WITH PAYMENT
     // =========================================
     @Transactional
     public Order placeOrderWithPayment(
@@ -182,7 +190,7 @@ public class CheckoutService {
             );
         }
 
-        // Reuse existing validated order creation.
+        // Reuse validated order creation.
         Order savedOrder = placeOrder(cart, form);
 
         // Create linked payment in the same transaction.
@@ -193,26 +201,57 @@ public class CheckoutService {
 
         return savedOrder;
     }
-    // New checkout flow: order, payment and private review token are
-    // persisted together. Any failure rolls back all three records.
+
+    // =========================================
+    // CHECKOUT WITH PAYMENT, REVIEW TOKEN
+    // AND SECURE TRACKING TOKEN
+    // =========================================
     @Transactional
-    public CheckoutWithReviewToken placeOrderWithPaymentAndReviewToken(
+    public CheckoutWithReviewToken
+    placeOrderWithPaymentAndReviewToken(
             ShoppingCart cart,
             CheckoutForm form,
             PaymentMethod paymentMethod) {
 
-        // Reuse the existing validated order/payment workflow.
-        Order savedOrder = placeOrderWithPayment(cart, form, paymentMethod);
+        // 1. Create customer, order, order items
+        // and payment using the existing workflow.
+        Order savedOrder = placeOrderWithPayment(
+                cart,
+                form,
+                paymentMethod
+        );
 
-        // Only the SHA-256 hash is stored in the database.
+        // 2. Generate a secure order tracking token.
+        // Only the SHA-256 hash is stored in MySQL.
+        String trackingToken =
+                orderTrackingTokenService
+                        .createTrackingToken(savedOrder);
+
+        // 3. Generate the private customer review token.
+        // Only its hash is stored in MySQL.
         String rawReviewToken =
-                feedbackAccessTokenService.generateTokenForOrder(savedOrder);
+                feedbackAccessTokenService
+                        .generateTokenForOrder(savedOrder);
 
-        // The raw token is returned only to the checkout controller,
-        // which will put it in the customer's private browser session.
-        return new CheckoutWithReviewToken(savedOrder, rawReviewToken);
+        // 4. Return the saved order and both raw tokens
+        // to CheckoutController.
+        //
+        // The Controller will store the tokens in
+        // the customer's browser session.
+        return new CheckoutWithReviewToken(
+                savedOrder,
+                rawReviewToken,
+                trackingToken
+        );
     }
 
-    public record CheckoutWithReviewToken(Order order, String reviewToken) {
+    // =========================================
+    // CHECKOUT RESULT
+    // =========================================
+    public record CheckoutWithReviewToken(
+            Order order,
+            String reviewToken,
+            String trackingToken
+    ) {
     }
 }

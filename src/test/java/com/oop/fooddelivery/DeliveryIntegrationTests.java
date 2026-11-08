@@ -9,29 +9,34 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
+@AutoConfigureMockMvc
 class DeliveryIntegrationTests {
 
-    @LocalServerPort
-    private int port;
+    @Autowired
+    private MockMvc mockMvc;
 
     @Autowired
     private DeliveryRepository deliveryRepository;
 
     @Autowired
     private OrderRepository orderRepository;
-
-    private final HttpClient client = HttpClient.newHttpClient();
 
     private Order testOrder;
 
@@ -52,19 +57,45 @@ class DeliveryIntegrationTests {
         return orderRepository.save(order);
     }
 
-    private HttpResponse<String> request(String method, String path, String body)
-            throws Exception {
-        HttpRequest.Builder builder = HttpRequest.newBuilder(
-                URI.create("http://localhost:" + port + "/foodflow" + path));
+    // MockMvc exercises the actual MVC and Spring Security filter chains,
+    // without requiring a real network connection or a test admin in MySQL.
+    private record TestResponse(int statusCode, String body) { }
 
-        if (method.equals("POST")) {
-            builder.header("Content-Type", "application/x-www-form-urlencoded")
-                    .POST(HttpRequest.BodyPublishers.ofString(body));
+    private TestResponse request(String method, String path, String body)
+            throws Exception {
+        String url = "/foodflow" + path;
+        MockHttpServletRequestBuilder builder;
+
+        if ("POST".equals(method)) {
+            builder = post(url)
+                    .contextPath("/foodflow")
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .with(csrf());
+
+            // Convert URL-encoded form fields into request parameters.
+            // URLDecoder also turns '+' into spaces for delivery statuses.
+            if (body != null && !body.isBlank()) {
+                for (String field : body.split("&")) {
+                    String[] pair = field.split("=", 2);
+                    String key = URLDecoder.decode(pair[0], StandardCharsets.UTF_8);
+                    String value = pair.length > 1
+                            ? URLDecoder.decode(pair[1], StandardCharsets.UTF_8)
+                            : "";
+                    builder.param(key, value);
+                }
+            }
         } else {
-            builder.GET();
+            builder = get(url).contextPath("/foodflow");
         }
 
-        return client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        // These are ADMIN management tests; authenticate each request.
+        builder.with(user("admin@foodflow.test").roles("ADMIN"));
+
+        MvcResult result = mockMvc.perform(builder).andReturn();
+        return new TestResponse(
+                result.getResponse().getStatus(),
+                result.getResponse().getContentAsString()
+        );
     }
 
     private String validForm(Long orderId, String person) {
@@ -90,7 +121,7 @@ class DeliveryIntegrationTests {
         };
 
         for (String path : paths) {
-            HttpResponse<String> response = request("GET", path, "");
+            TestResponse response = request("GET", path, "");
             assertEquals(200, response.statusCode(), "Failed to load: " + path);
         }
 
@@ -136,7 +167,7 @@ class DeliveryIntegrationTests {
 
     @Test
     void invalidFormsRenderErrorsWithoutChangingDatabase() throws Exception {
-        HttpResponse<String> response = request(
+        TestResponse response = request(
                 "POST", "/delivery/add", "orderId=0&deliveryStatus=Unknown");
 
         assertEquals(200, response.statusCode());
@@ -191,7 +222,7 @@ class DeliveryIntegrationTests {
                 .orElseThrow().getDeliveryPersonName());
 
         // Assigning a third Delivery to the first Order must be REJECTED.
-        HttpResponse<String> duplicate = request(
+        TestResponse duplicate = request(
                 "POST", "/delivery/add", validForm("Duplicate"));
         assertEquals(200, duplicate.statusCode());
         assertEquals(2, deliveryRepository.count());

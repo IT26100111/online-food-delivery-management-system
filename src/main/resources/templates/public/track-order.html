@@ -1,24 +1,31 @@
+
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
+    <meta name="referrer" content="no-referrer">
+
     <title>Track Order | FoodFlow</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+    <!-- Bootstrap -->
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+            rel="stylesheet">
 
 </head>
 
-
 <body class="bg-light">
-
 
 <div class="container py-5">
 
@@ -26,8 +33,9 @@
 
         <div class="col-lg-9">
 
-
-            <!-- HEADING -->
+            <!-- ================================= -->
+            <!-- PAGE HEADING -->
+            <!-- ================================= -->
 
             <div class="text-center mb-5">
 
@@ -36,83 +44,93 @@
                 </h1>
 
                 <p class="text-muted">
-
-                    Enter your order number to check
-                    the latest delivery status.
-
+                    Track your delivery securely using
+                    the private tracking link provided
+                    when you placed your order.
                 </p>
 
             </div>
 
 
-            <!-- SEARCH -->
+            <!-- ================================= -->
+            <!-- PRIVATE TRACKING INFORMATION -->
+            <!-- ================================= -->
 
-            <div class="card border-0 shadow-sm mb-4">
+            <div class="card border-0 shadow-sm mb-4"
+                 th:if="${order == null}">
 
-                <div class="card-body p-4">
+                <div class="card-body p-4 text-center">
 
-                    <form th:action="@{/track-order/search}"
-                          method="get">
+                    <div class="mb-3">
 
-                        <div class="row g-2">
+                        <i class="fa-solid fa-lock
+                                  fa-2x text-primary"
+                           aria-hidden="true"></i>
 
-                            <div class="col-md-9">
+                    </div>
 
-                                <input type="number"
-                                       name="orderId"
-                                       class="form-control form-control-lg"
-                                       placeholder="Enter Order ID"
-                                       min="1"
-                                       required>
+                    <h5 class="fw-bold mb-3">
+                        Secure Order Tracking
+                    </h5>
 
-                            </div>
+                    <p class="text-muted mb-2">
+                        Your private tracking link is
+                        available on the order confirmation
+                        page after checkout.
+                    </p>
 
-
-                            <div class="col-md-3">
-
-                                <button type="submit"
-                                        class="btn btn-primary btn-lg w-100">
-
-                                    Track Order
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </form>
+                    <p class="text-muted small mb-0">
+                        Open your private link to view
+                        the latest delivery status.
+                        Order numbers alone cannot be
+                        used to access tracking information.
+                    </p>
 
                 </div>
 
             </div>
 
 
-            <!-- NOT FOUND -->
+            <!-- ================================= -->
+            <!-- INVALID OR EXPIRED TOKEN -->
+            <!-- ================================= -->
 
             <div th:if="${notFound}"
-                 class="alert alert-danger">
+                 class="alert alert-danger"
+                 role="alert">
 
-                Order not found.
-                Please check the Order ID and try again.
+                <i class="fa-solid fa-circle-exclamation me-2"
+                   aria-hidden="true"></i>
+
+                This tracking link is invalid or
+                has expired. Please check your
+                private tracking link.
 
             </div>
 
 
-            <!-- ORDER RESULT -->
+            <!-- ================================= -->
+            <!-- ORDER TRACKING RESULT -->
+            <!-- ================================= -->
 
-            <div th:if="${order != null}">
+            <div th:if="${order != null}"
+                 th:with="state=${order.status != null
+                         ? order.status.name()
+                         : 'UNKNOWN'}">
 
 
-                <!-- BASIC INFORMATION -->
+                <!-- ============================= -->
+                <!-- ORDER INFORMATION -->
+                <!-- ============================= -->
 
                 <div class="card border-0 shadow-sm mb-4">
 
                     <div class="card-body p-4">
 
-
-                        <div class="d-flex justify-content-between
-                                    align-items-start mb-4">
+                        <div class="d-flex
+                                    justify-content-between
+                                    align-items-start
+                                    flex-wrap gap-3">
 
                             <div>
 
@@ -123,6 +141,7 @@
                                 <h3 class="fw-bold mb-0">
 
                                     #
+
                                     <span th:text="${order.orderId}">
                                         1
                                     </span>
@@ -132,86 +151,21 @@
                             </div>
 
 
-                            <span class="badge bg-primary fs-6"
-                                  th:text="${order.status != null
-                                      ? order.status.displayName
-                                      : 'No Status'}">
+                            <!-- CURRENT ORDER STATUS -->
 
-                                Preparing
+                            <span class="badge bg-primary fs-6"
+                                  th:classappend="${state == 'DELIVERED'}
+                                          ? ' bg-success'
+                                          : (${state == 'CANCELLED'}
+                                             ? ' bg-danger'
+                                             : '')"
+                                  th:text="${order.status != null
+                                          ? order.status.displayName
+                                          : 'No Status'}">
+
+                                Pending
 
                             </span>
-
-                        </div>
-
-
-                        <div class="row g-4">
-
-
-                            <div class="col-md-6">
-
-                                <small class="text-muted">
-                                    Customer
-                                </small>
-
-                                <p class="fw-semibold mb-0"
-                                   th:text="${order.customer != null
-                                       ? order.customer.fullName
-                                       : 'No Customer'}">
-
-                                    Customer
-
-                                </p>
-
-                            </div>
-
-
-                            <div class="col-md-6">
-
-                                <small class="text-muted">
-                                    Restaurant
-                                </small>
-
-                                <p class="fw-semibold mb-0"
-                                   th:text="${order.restaurantName}">
-
-                                    Restaurant
-
-                                </p>
-
-                            </div>
-
-
-                            <div class="col-md-6">
-
-                                <small class="text-muted">
-                                    Order Date
-                                </small>
-
-                                <p class="fw-semibold mb-0"
-                                   th:text="${order.orderDate}">
-
-                                    Date
-
-                                </p>
-
-                            </div>
-
-
-                            <div class="col-md-6">
-
-                                <small class="text-muted">
-                                    Delivery Address
-                                </small>
-
-                                <p class="fw-semibold mb-0"
-                                   th:text="${order.deliveryAddress}">
-
-                                    Address
-
-                                </p>
-
-                            </div>
-
 
                         </div>
 
@@ -219,14 +173,26 @@
 
                 </div>
 
-                <div th:if="${order.status.name() == 'CANCELLED'}"
-                     class="alert alert-danger">
+
+                <!-- ============================= -->
+                <!-- CANCELLED ORDER NOTICE -->
+                <!-- ============================= -->
+
+                <div th:if="${state == 'CANCELLED'}"
+                     class="alert alert-danger"
+                     role="alert">
+
+                    <i class="fa-solid fa-circle-xmark me-2"
+                       aria-hidden="true"></i>
 
                     This order has been cancelled.
 
                 </div>
 
+
+                <!-- ============================= -->
                 <!-- ORDER PROGRESS -->
+                <!-- ============================= -->
 
                 <div class="card border-0 shadow-sm mb-4">
 
@@ -238,12 +204,21 @@
 
                         <div class="row text-center g-3">
 
+
                             <!-- PENDING -->
+
                             <div class="col">
 
-                                <div class="fw-bold"
-                                     th:classappend="${order.status != null} ? ' text-success' : ''">
-                                    ✓
+                                <div class="fw-bold fs-4"
+                                     th:text="${state != 'UNKNOWN'
+                                             and state != 'CANCELLED'
+                                             ? '✓' : '1'}"
+                                     th:classappend="${state != 'UNKNOWN'
+                                             and state != 'CANCELLED'}
+                                             ? ' text-success' : ''">
+
+                                    1
+
                                 </div>
 
                                 <small>
@@ -254,12 +229,23 @@
 
 
                             <!-- PREPARING -->
+
                             <div class="col">
 
-                                <div class="fw-bold"
-                                     th:text="${order.status.name() == 'PENDING' ? '2' : '✓'}"
-                                     th:classappend="${order.status.name() != 'PENDING'} ? ' text-success' : ''">
+                                <div class="fw-bold fs-4"
+                                     th:text="${state == 'PREPARING'
+                                             or state == 'READY'
+                                             or state == 'OUT_FOR_DELIVERY'
+                                             or state == 'DELIVERED'
+                                             ? '✓' : '2'}"
+                                     th:classappend="${state == 'PREPARING'
+                                             or state == 'READY'
+                                             or state == 'OUT_FOR_DELIVERY'
+                                             or state == 'DELIVERED'}
+                                             ? ' text-success' : ''">
+
                                     2
+
                                 </div>
 
                                 <small>
@@ -270,18 +256,21 @@
 
 
                             <!-- READY -->
+
                             <div class="col">
 
-                                <div class="fw-bold"
-                                     th:text="${order.status.name() == 'READY'
-                              or order.status.name() == 'OUT_FOR_DELIVERY'
-                              or order.status.name() == 'DELIVERED'
-                              ? '✓' : '3'}"
-                                     th:classappend="${order.status.name() == 'READY'
-                                     or order.status.name() == 'OUT_FOR_DELIVERY'
-                                     or order.status.name() == 'DELIVERED'}
-                                     ? ' text-success' : ''">
+                                <div class="fw-bold fs-4"
+                                     th:text="${state == 'READY'
+                                             or state == 'OUT_FOR_DELIVERY'
+                                             or state == 'DELIVERED'
+                                             ? '✓' : '3'}"
+                                     th:classappend="${state == 'READY'
+                                             or state == 'OUT_FOR_DELIVERY'
+                                             or state == 'DELIVERED'}
+                                             ? ' text-success' : ''">
+
                                     3
+
                                 </div>
 
                                 <small>
@@ -292,16 +281,19 @@
 
 
                             <!-- OUT FOR DELIVERY -->
+
                             <div class="col">
 
-                                <div class="fw-bold"
-                                     th:text="${order.status.name() == 'OUT_FOR_DELIVERY'
-                              or order.status.name() == 'DELIVERED'
-                              ? '✓' : '4'}"
-                                     th:classappend="${order.status.name() == 'OUT_FOR_DELIVERY'
-                                     or order.status.name() == 'DELIVERED'}
-                                     ? ' text-success' : ''">
+                                <div class="fw-bold fs-4"
+                                     th:text="${state == 'OUT_FOR_DELIVERY'
+                                             or state == 'DELIVERED'
+                                             ? '✓' : '4'}"
+                                     th:classappend="${state == 'OUT_FOR_DELIVERY'
+                                             or state == 'DELIVERED'}
+                                             ? ' text-success' : ''">
+
                                     4
+
                                 </div>
 
                                 <small>
@@ -312,13 +304,17 @@
 
 
                             <!-- DELIVERED -->
+
                             <div class="col">
 
-                                <div class="fw-bold"
-                                     th:text="${order.status.name() == 'DELIVERED' ? '✓' : '5'}"
-                                     th:classappend="${order.status.name() == 'DELIVERED'}
-                                     ? ' text-success' : ''">
+                                <div class="fw-bold fs-4"
+                                     th:text="${state == 'DELIVERED'
+                                             ? '✓' : '5'}"
+                                     th:classappend="${state == 'DELIVERED'}
+                                             ? ' text-success' : ''">
+
                                     5
+
                                 </div>
 
                                 <small>
@@ -334,118 +330,43 @@
                 </div>
 
 
-                <!-- ITEMS -->
+                <!-- ============================= -->
+                <!-- PRIVACY INFORMATION -->
+                <!-- ============================= -->
 
-                <div class="card border-0 shadow-sm">
+                <div class="alert alert-light border"
+                     role="note">
 
-                    <div class="card-body p-4">
+                    <i class="fa-solid fa-shield-halved
+                              text-success me-2"
+                       aria-hidden="true"></i>
 
-                        <h4 class="fw-bold mb-3">
-                            Order Items
-                        </h4>
-
-
-                        <div class="table-responsive">
-
-                            <table class="table align-middle">
-
-                                <thead>
-
-                                <tr>
-
-                                    <th>
-                                        Item
-                                    </th>
-
-                                    <th>
-                                        Qty
-                                    </th>
-
-                                    <th>
-                                        Price
-                                    </th>
-
-                                    <th>
-                                        Subtotal
-                                    </th>
-
-                                </tr>
-
-                                </thead>
-
-
-                                <tbody>
-
-
-                                <tr th:each="item : ${order.orderItems}">
-
-                                    <td th:text="${item.foodItem != null
-                                        ? item.foodItem.foodName
-                                        : 'Unknown Item'}">
-
-                                        Food
-
-                                    </td>
-
-
-                                    <td th:text="${item.quantity}">
-                                        1
-                                    </td>
-
-
-                                    <td>
-
-                                        Rs.
-                                        <span th:text="${item.unitPrice}">
-                                            0
-                                        </span>
-
-                                    </td>
-
-
-                                    <td>
-
-                                        Rs.
-                                        <span th:text="${item.subtotal}">
-                                            0
-                                        </span>
-
-                                    </td>
-
-                                </tr>
-
-
-                                </tbody>
-
-                            </table>
-
-                        </div>
-
-
-                        <div class="text-end mt-3">
-
-                            <small class="text-muted">
-                                Total
-                            </small>
-
-                            <h3 class="fw-bold">
-
-                                Rs.
-                                <span th:text="${order.totalAmount}">
-                                    0
-                                </span>
-
-                            </h3>
-
-                        </div>
-
-                    </div>
+                    Your tracking information is
+                    protected by a private link.
+                    Keep this link confidential.
 
                 </div>
 
-
             </div>
 
+
+            <!-- ================================= -->
+            <!-- BACK TO HOME -->
+            <!-- ================================= -->
+
+            <div class="text-center mt-4">
+
+                <a th:href="@{/}"
+                   class="btn btn-outline-secondary">
+
+                    <i class="fa-solid fa-arrow-left me-2"
+                       aria-hidden="true"></i>
+
+                    Back to Home
+
+                </a>
+
+            </div>
 
         </div>
 
@@ -453,7 +374,5 @@
 
 </div>
 
-
 </body>
-
 </html>

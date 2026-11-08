@@ -145,9 +145,14 @@ public class CheckoutController {
                     "checkoutConfirmedOrderId",
                     result.order().getOrderId()
             );
+
             session.setAttribute(
                     "checkoutReviewToken",
                     result.reviewToken()
+            );
+            session.setAttribute(
+                    "checkoutTrackingToken",
+                    result.trackingToken()
             );
 
             // Clear only after the transactional checkout succeeds.
@@ -180,6 +185,7 @@ public class CheckoutController {
         if (order == null) {
             session.removeAttribute("checkoutConfirmedOrderId");
             session.removeAttribute("checkoutReviewToken");
+            session.removeAttribute("checkoutTrackingToken");
             return "redirect:/menu";
         }
 
@@ -187,10 +193,25 @@ public class CheckoutController {
         // Fetch its actual Payment instead of displaying hardcoded status.
         Payment payment = paymentService.getLatestPaymentForOrder(orderId);
 
+
         model.addAttribute("order", order);
+
         model.addAttribute("payment", payment);
-        model.addAttribute("reviewToken", session.getAttribute("checkoutReviewToken"));
+
+// Existing private review token
+        model.addAttribute(
+                "reviewToken",
+                session.getAttribute("checkoutReviewToken")
+        );
+
+// New private tracking token
+        model.addAttribute(
+                "trackingToken",
+                session.getAttribute("checkoutTrackingToken")
+        );
+
         return "public/order-confirmation";
+
     }
 
     private boolean prepareOrderSummary(ShoppingCart cart, Model model) {

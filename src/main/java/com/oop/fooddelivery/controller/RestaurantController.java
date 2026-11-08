@@ -128,7 +128,8 @@ public class RestaurantController {
     }
 
     // DELETE - Remove restaurant
-    @GetMapping("/delete/{id}")
+
+    @PostMapping("/delete/{id}")
     public String deleteRestaurant(
             @PathVariable Long id) {
 
@@ -141,4 +142,5 @@ public class RestaurantController {
 
         return "redirect:/restaurant";
     }
+
 }

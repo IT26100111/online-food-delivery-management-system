@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.oop.fooddelivery.service.OrderTrackingTokenService;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
 
@@ -19,14 +21,18 @@ public class PublicPageController {
     private final OrderService orderService;
     private final RestaurantOperations restaurantService;
     private final FoodItemService foodItemService;
+    private final OrderTrackingTokenService orderTrackingTokenService;
 
     public PublicPageController(
             OrderService orderService,
             RestaurantOperations restaurantService,
-            FoodItemService foodItemService) {
+            FoodItemService foodItemService,
+            OrderTrackingTokenService orderTrackingTokenService) {
+
         this.orderService = orderService;
         this.restaurantService = restaurantService;
         this.foodItemService = foodItemService;
+        this.orderTrackingTokenService = orderTrackingTokenService;
     }
 
     // Existing order-tracking routes remain unchanged.
@@ -35,18 +41,58 @@ public class PublicPageController {
         return "public/track-order";
     }
 
-    @GetMapping("/track-order/search")
-    public String searchOrder(
-            @RequestParam Long orderId,
-            Model model) {
-        Order order = orderService.getOrderById(orderId);
 
-        if (order == null) {
+    // =========================================
+    // DISABLE INSECURE ORDER ID TRACKING
+    // =========================================
+    @GetMapping("/track-order/search")
+    public String searchOrder() {
+
+        // Numerical Order IDs must not grant
+        // access to another customer's order.
+        // Direct visitors to private-link tracking.
+        return "redirect:/track-order";
+    }
+
+
+
+    // =========================================
+    // SECURE GUEST ORDER TRACKING
+    // =========================================
+    @GetMapping("/track-order/secure")
+    public String secureTrackOrder(
+            @RequestParam(required = false) String token,
+            Model model,
+            HttpServletResponse response) {
+
+        // Do not let browsers or intermediaries cache
+        // pages accessed using private tracking tokens.
+        response.setHeader(
+                "Cache-Control",
+                "no-store"
+        );
+
+        // Avoid sending the private token URL
+        // as a referrer to other websites.
+        response.setHeader(
+                "Referrer-Policy",
+                "no-referrer"
+        );
+
+        // Look up the order using the token hash.
+        // Invalid or expired tokens return no order.
+        var order = orderTrackingTokenService
+                .findOrderByToken(token);
+
+        if (order.isEmpty()) {
             model.addAttribute("notFound", true);
             return "public/track-order";
         }
 
-        model.addAttribute("order", order);
+        // The tracking page displays order status
+        // without exposing private customer details.
+        model.addAttribute("order", order.get());
+
         return "public/track-order";
     }
 
