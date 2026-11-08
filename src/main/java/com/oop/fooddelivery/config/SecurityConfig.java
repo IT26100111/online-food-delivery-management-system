@@ -79,7 +79,24 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/", true)
+                        .successHandler((request, response, authentication) -> {
+
+                            boolean isAdmin = authentication.getAuthorities()
+                                    .stream()
+                                    .anyMatch(authority ->
+                                            "ROLE_ADMIN".equals(authority.getAuthority())
+                                    );
+
+                            if (isAdmin) {
+                                response.sendRedirect(
+                                        request.getContextPath() + "/dashboard"
+                                );
+                            } else {
+                                response.sendRedirect(
+                                        request.getContextPath() + "/"
+                                );
+                            }
+                        })
                         .failureUrl("/login?error")
                         .permitAll()
                 )

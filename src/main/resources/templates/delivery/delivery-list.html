@@ -22,84 +22,10 @@
 
 <div class="dashboard-wrapper">
 
-  <!-- ================= SIDEBAR ================= -->
 
-  <aside class="sidebar">
+  <!-- Shared Admin Sidebar -->
+  <div th:replace="~{fragments/admin-sidebar :: sidebar('delivery')}"></div>
 
-    <a href="/" th:href="@{/}" class="sidebar-logo">
-      <i class="fa-solid fa-bowl-food"></i>
-      FoodFlow
-    </a>
-
-    <ul class="sidebar-menu">
-
-      <li>
-        <a href="/dashboard" th:href="@{/dashboard}">
-          <i class="fa-solid fa-chart-line"></i>
-          Dashboard
-        </a>
-      </li>
-
-      <li>
-        <a href="/customer" th:href="@{/customer}">
-          <i class="fa-solid fa-users"></i>
-          Customers
-        </a>
-      </li>
-
-      <li>
-        <a href="/restaurant" th:href="@{/restaurant}">
-          <i class="fa-solid fa-store"></i>
-          Restaurants
-        </a>
-      </li>
-
-      <li>
-        <a href="/food" th:href="@{/food}">
-          <i class="fa-solid fa-burger"></i>
-          Food Items
-        </a>
-      </li>
-
-      <li>
-        <a href="#">
-          <i class="fa-solid fa-receipt"></i>
-          Orders
-        </a>
-      </li>
-
-      <!-- Delivery is ACTIVE on this page -->
-      <li>
-        <a href="/delivery" th:href="@{/delivery}" class="active">
-          <i class="fa-solid fa-motorcycle"></i>
-          Deliveries
-        </a>
-      </li>
-
-      <li>
-        <a href="#">
-          <i class="fa-solid fa-credit-card"></i>
-          Payments
-        </a>
-      </li>
-
-      <li>
-        <a href="#">
-          <i class="fa-solid fa-comment-dots"></i>
-          Feedback
-        </a>
-      </li>
-
-      <li>
-        <a href="/" th:href="@{/}">
-          <i class="fa-solid fa-house"></i>
-          Back to Home
-        </a>
-      </li>
-
-    </ul>
-
-  </aside>
 
 
   <!-- ================= MAIN CONTENT ================= -->

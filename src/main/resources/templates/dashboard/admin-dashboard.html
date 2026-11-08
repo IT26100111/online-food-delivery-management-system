@@ -1,57 +1,56 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Admin Dashboard | FoodFlow</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <link rel="stylesheet" href="/css/dashboard.css" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet"
+          href="/css/dashboard.css"
+          th:href="@{/css/dashboard.css}">
 </head>
 
 <body>
 
 <div class="dashboard-wrapper">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <a href="/" th:href="@{/}" class="sidebar-logo">
-            <i class="fa-solid fa-bowl-food"></i>
-            FoodFlow
-        </a>
 
-        <ul class="sidebar-menu">
-            <li><a href="/dashboard" th:href="@{/dashboard}" class="active"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
-            <li><a href="/customer" th:href="@{/customer}"><i class="fa-solid fa-users"></i> Customers</a></li>
-            <li><a href="/restaurant" th:href="@{/restaurant}"><i class="fa-solid fa-store"></i> Restaurants</a></li>
-            <li><a href="/food" th:href="@{/food}"><i class="fa-solid fa-burger"></i> Food Items</a></li>
-            <li><a href="#"><i class="fa-solid fa-receipt"></i> Orders</a></li>
-            <li><a href="/delivery" th:href="@{/delivery}"><i class="fa-solid fa-motorcycle"></i> Deliveries</a></li>
-            <li><a href="#"><i class="fa-solid fa-credit-card"></i> Payments</a></li>
-            <li><a href="#"><i class="fa-solid fa-comment-dots"></i> Feedback</a></li>
-            <li><a href="/" th:href="@{/}"><i class="fa-solid fa-house"></i> Back to Home</a></li>
-        </ul>
-    </aside>
+    <!-- Shared Admin Sidebar -->
+    <div th:replace="~{fragments/admin-sidebar :: sidebar('dashboard')}"></div>
 
-    <!-- Main Content -->
+
+    <!-- ================= MAIN CONTENT ================= -->
     <main class="main-content">
 
-        <!-- Topbar -->
+        <!-- ================= TOPBAR ================= -->
         <div class="topbar">
+
             <div>
                 <h3>Admin Dashboard</h3>
-                <p>Manage the complete online food delivery system from one place.</p>
+                <p>
+                    Manage the complete online food delivery
+                    system from one place.
+                </p>
             </div>
 
             <div class="admin-badge">
-                <i class="fa-solid fa-user-shield"></i> Admin Panel
+                <i class="fa-solid fa-user-shield"></i>
+                Admin Panel
             </div>
+
         </div>
 
-        <!-- Stats -->
+        <!-- ================= STATISTICS ================= -->
         <div class="row g-4 mb-4">
+
+            <!-- Total Customers -->
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card">
                     <div class="stat-icon icon-orange">
@@ -62,6 +61,7 @@
                 </div>
             </div>
 
+            <!-- Restaurants -->
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card">
                     <div class="stat-icon icon-green">
@@ -72,6 +72,7 @@
                 </div>
             </div>
 
+            <!-- Total Orders -->
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card">
                     <div class="stat-icon icon-blue">
@@ -82,6 +83,7 @@
                 </div>
             </div>
 
+            <!-- Pending Deliveries -->
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card">
                     <div class="stat-icon icon-yellow">
@@ -91,17 +93,23 @@
                     <p>Pending Deliveries</p>
                 </div>
             </div>
+
         </div>
 
+        <!-- ================= DASHBOARD SECTIONS ================= -->
         <div class="row g-4">
 
-            <!-- Recent Orders -->
+            <!-- ================= RECENT ORDERS ================= -->
             <div class="col-lg-8">
+
                 <div class="content-card">
+
                     <h5>Recent Orders</h5>
 
                     <div class="table-responsive">
+
                         <table class="table align-middle">
+
                             <thead>
                             <tr>
                                 <th>Order ID</th>
@@ -113,12 +121,17 @@
                             </thead>
 
                             <tbody>
+
                             <tr>
                                 <td>#ORD-001</td>
                                 <td>Nimal Perera</td>
                                 <td>Chicken Burger Combo</td>
                                 <td>Rs. 2,400</td>
-                                <td><span class="status status-delivered">Delivered</span></td>
+                                <td>
+                                    <span class="status status-delivered">
+                                        Delivered
+                                    </span>
+                                </td>
                             </tr>
 
                             <tr>
@@ -126,7 +139,11 @@
                                 <td>Kasun Silva</td>
                                 <td>Seafood Pizza</td>
                                 <td>Rs. 3,200</td>
-                                <td><span class="status status-pending">Pending</span></td>
+                                <td>
+                                    <span class="status status-pending">
+                                        Pending
+                                    </span>
+                                </td>
                             </tr>
 
                             <tr>
@@ -134,7 +151,11 @@
                                 <td>Amaya Fernando</td>
                                 <td>Fried Rice Special</td>
                                 <td>Rs. 1,850</td>
-                                <td><span class="status status-delivered">Delivered</span></td>
+                                <td>
+                                    <span class="status status-delivered">
+                                        Delivered
+                                    </span>
+                                </td>
                             </tr>
 
                             <tr>
@@ -142,51 +163,89 @@
                                 <td>Tharindu Jayasuriya</td>
                                 <td>Chocolate Milkshake</td>
                                 <td>Rs. 950</td>
-                                <td><span class="status status-cancelled">Cancelled</span></td>
+                                <td>
+                                    <span class="status status-cancelled">
+                                        Cancelled
+                                    </span>
+                                </td>
                             </tr>
+
                             </tbody>
+
                         </table>
+
                     </div>
 
                 </div>
+
             </div>
 
-            <!-- Quick Actions -->
+            <!-- ================= QUICK ACTIONS ================= -->
             <div class="col-lg-4">
+
                 <div class="content-card">
+
                     <h5>Quick Actions</h5>
 
-                    <a href="/customer/add" th:href="@{/customer/add}" class="quick-action">
-                        <i class="fa-solid fa-plus"></i> Add New Customer
+                    <!-- Add Customer -->
+                    <a href="/customer/add"
+                       th:href="@{/customer/add}"
+                       class="quick-action">
+                        <i class="fa-solid fa-plus"></i>
+                        Add New Customer
                     </a>
 
-                    <a href="/food/add" th:href="@{/food/add}" class="quick-action">
-                        <i class="fa-solid fa-burger"></i> Add Food Item
+                    <!-- Add Food Item -->
+                    <a href="/food/add"
+                       th:href="@{/food/add}"
+                       class="quick-action">
+                        <i class="fa-solid fa-burger"></i>
+                        Add Food Item
                     </a>
 
-                    <a href="#" class="quick-action">
-                        <i class="fa-solid fa-receipt"></i> View Orders
+                    <!-- View Orders - FIXED -->
+                    <a href="/order"
+                       th:href="@{/order}"
+                       class="quick-action">
+                        <i class="fa-solid fa-receipt"></i>
+                        View Orders
                     </a>
 
-                    <a href="/delivery/add" th:href="@{/delivery/add}" class="quick-action">
-                        <i class="fa-solid fa-motorcycle"></i> Assign Delivery
+                    <!-- Assign Delivery -->
+                    <a href="/delivery/add"
+                       th:href="@{/delivery/add}"
+                       class="quick-action">
+                        <i class="fa-solid fa-motorcycle"></i>
+                        Assign Delivery
                     </a>
 
-                    <a href="#" class="quick-action">
-                        <i class="fa-solid fa-credit-card"></i> Record Payment
+                    <!-- Record Payment - FIXED -->
+                    <a href="/payment/add"
+                       th:href="@{/payment/add}"
+                       class="quick-action">
+                        <i class="fa-solid fa-credit-card"></i>
+                        Record Payment
                     </a>
 
-                    <a href="#" class="quick-action">
-                        <i class="fa-solid fa-comment-dots"></i> View Feedback
+                    <!-- View Feedback - FIXED -->
+                    <a href="/feedback"
+                       th:href="@{/feedback}"
+                       class="quick-action">
+                        <i class="fa-solid fa-comment-dots"></i>
+                        View Feedback
                     </a>
+
                 </div>
+
             </div>
 
         </div>
 
     </main>
+
 </div>
 
+<!-- ================= SCRIPTS ================= -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

@@ -101,17 +101,39 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
 
+                <!-- VISITOR: SIGN IN -->
+                <li class="nav-item" th:if="${!loggedIn}">
                     <a class="btn-main btn-nav ms-lg-2"
-                       href="/login"
                        th:href="@{/login}">
-
                         <i class="fa-regular fa-user me-2"></i>
                         Sign In
-
                     </a>
+                </li>
 
+                <!-- ADMIN: DASHBOARD -->
+                <li class="nav-item" th:if="${loggedIn and admin}">
+                    <a class="btn-main btn-nav ms-lg-2"
+                       th:href="@{/dashboard}">
+                        <i class="fa-solid fa-gauge-high me-2"></i>
+                        Admin Dashboard
+                    </a>
+                </li>
+
+                <!-- LOGGED-IN USER: LOG OUT -->
+                <li class="nav-item" th:if="${loggedIn}">
+                    <form th:action="@{/logout}" method="post">
+                        <input type="hidden"
+                               th:name="${_csrf.parameterName}"
+                               th:value="${_csrf.token}">
+
+                        <button type="submit"
+                                class="btn-main btn-nav ms-lg-2"
+                                style="border: none; cursor: pointer;">
+                            <i class="fa-solid fa-right-from-bracket me-2"></i>
+                            Log Out
+                        </button>
+                    </form>
                 </li>
 
             </ul>
