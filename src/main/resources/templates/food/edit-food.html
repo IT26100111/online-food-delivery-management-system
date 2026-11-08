@@ -117,16 +117,21 @@
                 Select a Restaurant
               </option>
 
+
               <option th:each="restaurant : ${restaurants}"
-                      th:if="${restaurant.active}"
+                      th:if="${restaurant.active or
+                (selectedRestaurantId != null
+                and selectedRestaurantId == restaurant.restaurantId)}"
                       th:value="${restaurant.restaurantId}"
-                      th:text="${restaurant.restaurantName}"
+                      th:text="${restaurant.restaurantName +
+                (restaurant.active ? '' : ' (Inactive - existing assignment)')}"
                       th:selected="${selectedRestaurantId != null
-                    and selectedRestaurantId == restaurant.restaurantId}">
+                and selectedRestaurantId == restaurant.restaurantId}">
 
                 Restaurant Name
 
               </option>
+
 
             </select>
 
