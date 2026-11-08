@@ -1,3 +1,4 @@
+
 package com.oop.fooddelivery.service;
 
 import com.oop.fooddelivery.model.Feedback;
@@ -15,7 +16,6 @@ public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final OrderService orderService;
 
-    // Constructor-based Dependency Injection
     public FeedbackService(
             FeedbackRepository feedbackRepository,
             OrderService orderService) {
@@ -37,13 +37,13 @@ public class FeedbackService {
                 .orElse(null);
     }
 
-    // READ: Get feedback for a specific order
+    // READ: Get feedback for an Order
     @Transactional(readOnly = true)
     public List<Feedback> getFeedbackByOrderId(Long orderId) {
         return feedbackRepository.findByOrder_OrderId(orderId);
     }
 
-    // CREATE: Add new feedback
+    // CREATE: Submit feedback
     @Transactional
     public Feedback createFeedback(
             Long orderId,
@@ -56,6 +56,7 @@ public class FeedbackService {
             );
         }
 
+        // Verify the Order exists.
         Order order = orderService.getOrderById(orderId);
 
         if (order == null) {
@@ -64,11 +65,18 @@ public class FeedbackService {
             );
         }
 
-        // The Feedback constructor enforces:
-        // 1. Existing Order
-        // 2. DELIVERED Order status
-        // 3. Rating between 1 and 5
-        // 4. Non-empty review message
+        // NEW: Prevent duplicate reviews.
+        if (feedbackRepository.existsByOrder_OrderId(orderId)) {
+            throw new IllegalArgumentException(
+                    "This order already has feedback. " +
+                            "Only one review is allowed per order."
+            );
+        }
+
+        // Feedback constructor validates:
+        // 1. Order must be DELIVERED
+        // 2. Rating must be between 1 and 5
+        // 3. Review message must be valid
         Feedback feedback = new Feedback(
                 order,
                 rating,
@@ -78,7 +86,7 @@ public class FeedbackService {
         return feedbackRepository.save(feedback);
     }
 
-    // UPDATE: Change rating and review text
+    // UPDATE: Edit existing feedback
     @Transactional
     public Feedback updateFeedback(
             Long feedbackId,
@@ -93,15 +101,13 @@ public class FeedbackService {
                         )
                 );
 
-        // Existing historical records are preserved.
-        // We do not re-check the Order status here.
         existing.setRating(rating);
         existing.setReviewMessage(reviewMessage);
 
         return feedbackRepository.save(existing);
     }
 
-    // UPDATE: Change visibility status
+    // UPDATE: Change feedback visibility
     @Transactional
     public Feedback updateFeedbackStatus(
             Long feedbackId,
@@ -120,7 +126,7 @@ public class FeedbackService {
         return feedbackRepository.save(existing);
     }
 
-    // DELETE: Remove feedback only
+    // DELETE: Remove feedback
     @Transactional
     public void deleteFeedback(Long feedbackId) {
 

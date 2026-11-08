@@ -62,6 +62,15 @@ public class PaymentService {
         return paymentRepository.findById(id).orElse(null);
     }
 
+    // Used by the customer's session-scoped order confirmation page.
+    @Transactional(readOnly = true)
+    public Payment getLatestPaymentForOrder(Long orderId) {
+        if (orderId == null) return null;
+        return paymentRepository
+                .findTopByOrder_OrderIdOrderByPaymentIdDesc(orderId)
+                .orElse(null);
+    }
+
     @Transactional
     public void changePaymentStatus(Long id, PaymentStatus requestedStatus) {
         Payment payment = paymentRepository.findById(id)

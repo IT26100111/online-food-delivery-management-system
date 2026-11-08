@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart | FoodFlow</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="/css/public-pages.css" th:href="@{/css/public-pages.css}">
+
+    <style>
+        .cart-content { padding: 58px 0 100px; background: #fff; min-height: 450px; }
+        .cart-heading { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 26px; }
+        .cart-heading h2 { color: var(--charcoal); font-size: clamp(26px, 3vw, 38px); font-weight: 800; letter-spacing: -.04em; margin: 0 0 6px; }
+        .cart-heading p { color: var(--muted); font-size: 14px; margin: 0; }
+        .cart-panel { background: #fff; border: 1px solid var(--border); border-radius: 15px; overflow: hidden; }
+        .cart-line { padding: 24px; display: flex; align-items: center; gap: 20px; border-bottom: 1px solid var(--border); }
+        .cart-line:last-child { border-bottom: 0; }
+        .cart-thumbnail { width: 108px; height: 108px; flex: 0 0 108px; border-radius: 11px; background: linear-gradient(135deg, #f8e9d8, #f9f3ea); overflow: hidden; display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 35px; }
+        .cart-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+        .cart-line-info { min-width: 0; flex: 1; }
+        .cart-item-name { font-size: 18px; color: var(--charcoal); font-weight: 800; margin: 0 0 5px; }
+        .cart-item-category { font-size: 12px; color: var(--muted); margin: 0 0 9px; }
+        .cart-unit-price { font-size: 13px; color: var(--muted); margin: 0; }
+        .cart-controls { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+        .cart-controls label { display: block; color: var(--muted); font-size: 11px; font-weight: 700; margin-bottom: 5px; }
+        .cart-controls input[type="number"] { width: 75px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); color: var(--charcoal); }
+        .cart-secondary-btn { border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--charcoal); padding: 9px 13px; font-size: 12px; font-weight: 700; }
+        .cart-secondary-btn:hover { border-color: var(--charcoal); }
+        .cart-remove-btn { color: #b33d35; }
+        .cart-line-total { text-align: right; color: var(--charcoal); font-size: 18px; font-weight: 800; white-space: nowrap; align-self: flex-start; }
+        .cart-panel-footer { padding: 20px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .cart-link { color: var(--primary); font-size: 13px; font-weight: 800; text-decoration: none; }
+        .cart-link:hover { text-decoration: underline; }
+        .cart-summary { background: var(--cream); border: 1px solid var(--border); border-radius: 15px; padding: 25px; position: sticky; top: 115px; }
+        .cart-summary h3 { color: var(--charcoal); font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+        .cart-summary-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; color: var(--muted); font-size: 13px; }
+        .cart-summary-row strong { color: var(--charcoal); }
+        .cart-summary-total { border-top: 1px solid var(--border); margin-top: 12px; padding-top: 17px; display: flex; justify-content: space-between; align-items: center; color: var(--charcoal); font-weight: 800; font-size: 18px; }
+        .cart-primary-btn { width: 100%; border: 0; border-radius: 9px; padding: 13px 15px; background: var(--primary); color: #fff; font-size: 13px; font-weight: 800; margin-top: 19px; }
+        .cart-primary-btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+        .cart-primary-btn:hover { background: var(--primary-dark); color: #fff; }
+        .cart-primary-btn:disabled { background: #c7bcb2; cursor: not-allowed; }
+        .cart-note { color: var(--muted); font-size: 11px; line-height: 1.7; margin: 10px 0 0; }
+        .cart-empty { text-align: center; border: 1px dashed var(--border); border-radius: 15px; background: var(--cream); padding: 70px 24px; }
+        .cart-empty i { font-size: 40px; color: var(--primary); margin-bottom: 15px; }
+        .cart-empty h2 { color: var(--charcoal); font-weight: 800; font-size: 26px; }
+        .cart-empty p { color: var(--muted); font-size: 14px; margin: 9px 0 22px; }
+        .cart-browse { display: inline-flex; gap: 8px; align-items: center; padding: 12px 18px; border-radius: 9px; color: #fff; background: var(--charcoal); font-size: 13px; font-weight: 800; text-decoration: none; }
+        .cart-browse:hover { color: #fff; opacity: .92; }
+        @media (max-width: 767px) {
+            .cart-heading { align-items: flex-start; flex-direction: column; }
+            .cart-line { padding: 18px; align-items: flex-start; gap: 13px; flex-wrap: wrap; }
+            .cart-thumbnail { width: 82px; height: 82px; flex-basis: 82px; }
+            .cart-line-total { width: 100%; text-align: left; }
+            .cart-summary { position: static; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <div class="container">
+        <a class="brand-logo" th:href="@{/}" href="/">
+            <span class="brand-mark"><i class="fa-solid fa-bowl-food"></i></span>
+            <span>FoodFlow</span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
+            <ul class="navbar-nav align-items-lg-center gap-lg-1">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/restaurants}" href="/restaurants">Restaurants</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/menu}" href="/menu">Food</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/track-order}" href="/track-order">Track Order</a></li>
+                <li class="nav-item"><a class="nav-link active" th:href="@{/cart}" href="/cart"><i class="fa-solid fa-cart-shopping me-2"></i>Cart</a></li>
+                <li class="nav-item"><a class="btn-main btn-nav ms-lg-2" th:href="@{/login}" href="/login"><i class="fa-regular fa-user me-2"></i>Sign In</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <section class="public-page-hero">
+        <div class="container">
+            <span class="eyebrow">Your FoodFlow Order</span>
+            <h1>Your cart.<br><span>Your favourites.</span></h1>
+            <p>Review your selections, adjust quantities and check the total before checkout.</p>
+        </div>
+    </section>
+
+    <section class="cart-content">
+        <div class="container">
+            <div class="alert alert-success rounded-3 mb-4" role="status"
+                 th:if="${cartSuccess != null}" th:text="${cartSuccess}">Item added.</div>
+            <div class="alert alert-danger rounded-3 mb-4" role="alert"
+                 th:if="${cartError != null}" th:text="${cartError}">Cart error.</div>
+            <div class="alert alert-warning rounded-3 mb-4" role="alert"
+                 th:if="${containsUnavailableItems}">
+                Some cart items are unavailable or no longer belong to an active restaurant.
+                They are excluded from the total. Clear your cart if you cannot remove them individually.
+            </div>
+
+            <div th:if="${cartLines.isEmpty()}" class="cart-empty">
+                <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+                <h2>Your cart is empty</h2>
+                <p>Browse the menu to add something delicious.</p>
+                <a class="cart-browse" th:href="@{/menu}" href="/menu">Explore Food <i class="fa-solid fa-arrow-right"></i></a>
+                <form th:if="${cartCount > 0}" th:action="@{/cart/clear}" method="post" class="mt-3">
+                    <button type="submit" class="cart-secondary-btn cart-remove-btn">Clear unavailable items</button>
+                </form>
+            </div>
+
+            <div class="row g-4" th:unless="${cartLines.isEmpty()}">
+                <div class="col-lg-8">
+                    <div class="cart-heading">
+                        <div>
+                            <h2>Order items</h2>
+                            <p th:if="${selectedRestaurant != null}">
+                                <i class="fa-solid fa-store me-1"></i>
+                                <span th:text="${selectedRestaurant.restaurantName}">Restaurant</span>
+                            </p>
+                        </div>
+                        <span class="menu-count" th:text="${cartCount} + ' item(s) in cart'">0 items in cart</span>
+                    </div>
+
+                    <div class="cart-panel">
+                        <div class="cart-line" th:each="line : ${cartLines}">
+                            <div class="cart-thumbnail">
+                                <img th:if="${line.foodItem.imageUrl != null and !#strings.isEmpty(line.foodItem.imageUrl)}"
+                                     th:src="${line.foodItem.imageUrl}" th:alt="${line.foodItem.foodName}" alt="Food item">
+                                <i th:unless="${line.foodItem.imageUrl != null and !#strings.isEmpty(line.foodItem.imageUrl)}"
+                                   class="fa-solid fa-bowl-food" aria-hidden="true"></i>
+                            </div>
+
+                            <div class="cart-line-info">
+                                <h3 class="cart-item-name" th:text="${line.foodItem.foodName}">Food Name</h3>
+                                <p class="cart-item-category" th:text="${line.foodItem.category}">Category</p>
+                                <p class="cart-unit-price">
+                                    Unit price:
+                                    <span th:text="${'Rs. ' + #numbers.formatDecimal(line.foodItem.price, 1, 'COMMA', 2, 'POINT')}">Rs. 0.00</span>
+                                </p>
+                                <div class="cart-controls">
+                                    <form th:action="@{/cart/update}" method="post">
+                                        <input type="hidden" name="foodItemId" th:value="${line.foodItem.foodItemId}">
+                                        <label th:for="${'qty-' + line.foodItem.foodItemId}">Quantity</label>
+                                        <input type="number" name="quantity" min="1" max="20" required
+                                               th:id="${'qty-' + line.foodItem.foodItemId}"
+                                               th:value="${line.quantity}" value="1">
+                                        <button type="submit" class="cart-secondary-btn ms-1">Update</button>
+                                    </form>
+                                    <form th:action="@{/cart/remove}" method="post">
+                                        <input type="hidden" name="foodItemId" th:value="${line.foodItem.foodItemId}">
+                                        <button type="submit" class="cart-secondary-btn cart-remove-btn">
+                                            <i class="fa-solid fa-trash-can me-1"></i>Remove
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="cart-line-total"
+                                 th:text="${'Rs. ' + #numbers.formatDecimal(line.subtotal, 1, 'COMMA', 2, 'POINT')}">
+                                Rs. 0.00
+                            </div>
+                        </div>
+
+                        <div class="cart-panel-footer">
+                            <a class="cart-link" th:if="${selectedRestaurant != null}"
+                               th:href="@{/menu(restaurantId=${selectedRestaurant.restaurantId})}" href="/menu">
+                                <i class="fa-solid fa-arrow-left me-1"></i> Continue shopping
+                            </a>
+                            <a class="cart-link" th:unless="${selectedRestaurant != null}"
+                               th:href="@{/menu}" href="/menu">
+                                <i class="fa-solid fa-arrow-left me-1"></i> Continue shopping
+                            </a>
+                            <form th:action="@{/cart/clear}" method="post">
+                                <button type="submit" class="cart-secondary-btn cart-remove-btn">Clear cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <aside class="cart-summary">
+                        <h3>Order summary</h3>
+                        <div class="cart-summary-row">
+                            <span>Items</span>
+                            <strong th:text="${cartCount}">0</strong>
+                        </div>
+                        <div class="cart-summary-row">
+                            <span>Food subtotal</span>
+                            <strong th:text="${'Rs. ' + #numbers.formatDecimal(totalAmount, 1, 'COMMA', 2, 'POINT')}">Rs. 0.00</strong>
+                        </div>
+                        <div class="cart-summary-row">
+                            <span>Delivery fee</span>
+                            <span>Not included yet</span>
+                        </div>
+                        <div class="cart-summary-total">
+                            <span>Food total</span>
+                            <span th:text="${'Rs. ' + #numbers.formatDecimal(totalAmount, 1, 'COMMA', 2, 'POINT')}">Rs. 0.00</span>
+                        </div>
+                        <a th:if="${!containsUnavailableItems}"
+                           class="cart-primary-btn" th:href="@{/checkout}" href="/checkout">
+                            <i class="fa-solid fa-arrow-right me-2" aria-hidden="true"></i> Proceed to checkout
+                        </a>
+                        <button th:if="${containsUnavailableItems}" class="cart-primary-btn" type="button" disabled>
+                            Review unavailable items before checkout
+                        </button>
+                        <p class="cart-note">This version saves a pending order based on the food total only. Payment and delivery fees will be connected in a later step.</p>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand-column">
+                <a class="footer-brand" th:href="@{/}" href="/"><i class="fa-solid fa-bowl-food"></i> FoodFlow</a>
+                <p>Great food from local restaurants, delivered simply and reliably.</p>
+            </div>
+            <div>
+                <h6>Explore</h6>
+                <a th:href="@{/}" href="/">Home</a>
+                <a th:href="@{/restaurants}" href="/restaurants">Restaurants</a>
+                <a th:href="@{/menu}" href="/menu">Food</a>
+            </div>
+            <div>
+                <h6>Support</h6>
+                <a th:href="@{/track-order}" href="/track-order">Track Order</a>
+                <a th:href="@{/about}" href="/about">About</a>
+            </div>
+            <div>
+                <h6>Account</h6>
+                <a th:href="@{/cart}" href="/cart">Shopping Cart</a>
+                <a th:href="@{/login}" href="/login">Sign In</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 FoodFlow. All rights reserved.</p>
+            <p>Online Food Delivery Management System</p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
