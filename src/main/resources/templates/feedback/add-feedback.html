@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Add Feedback | FoodFlow</title>
+
+    <!-- Bootstrap -->
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- FoodFlow Dashboard CSS -->
+    <link rel="stylesheet"
+          th:href="@{/css/dashboard.css}">
+
+</head>
+
+<body>
+
+<div class="dashboard-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <a th:href="@{/}" class="sidebar-logo">
+            <i class="fa-solid fa-bowl-food"></i>
+            FoodFlow
+        </a>
+
+        <ul class="sidebar-menu">
+
+            <li>
+                <a th:href="@{/dashboard}">
+                    <i class="fa-solid fa-chart-line"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/customer}">
+                    <i class="fa-solid fa-users"></i>
+                    Customers
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/restaurant}">
+                    <i class="fa-solid fa-store"></i>
+                    Restaurants
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/food}">
+                    <i class="fa-solid fa-burger"></i>
+                    Food Items
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/order}">
+                    <i class="fa-solid fa-receipt"></i>
+                    Orders
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/delivery}">
+                    <i class="fa-solid fa-truck"></i>
+                    Delivery
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/payment}">
+                    <i class="fa-solid fa-credit-card"></i>
+                    Payments
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/feedback}" class="active">
+                    <i class="fa-solid fa-star"></i>
+                    Feedback
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+
+            <div>
+                <h1>Add Feedback</h1>
+                <p>
+                    Add a customer review for a delivered order.
+                </p>
+            </div>
+
+            <a th:href="@{/feedback}"
+               class="btn btn-outline-secondary rounded-4 px-4">
+
+                <i class="fa-solid fa-arrow-left"></i>
+                Back
+
+            </a>
+
+        </div>
+
+        <!-- FORM SECTION -->
+        <section class="content-card">
+
+            <!-- ERROR MESSAGE -->
+            <div th:if="${error}"
+                 class="alert alert-danger rounded-4"
+                 role="alert">
+
+                <i class="fa-solid fa-circle-exclamation me-2"></i>
+
+                <span th:text="${error}">
+                    Error message
+                </span>
+
+            </div>
+
+            <!-- NO DELIVERED ORDERS -->
+            <div th:if="${#lists.isEmpty(orders)}"
+                 class="alert alert-warning rounded-4"
+                 role="alert">
+
+                <i class="fa-solid fa-triangle-exclamation me-2"></i>
+
+                No delivered orders are available.
+
+                Please complete an order's delivery
+                before submitting feedback.
+
+            </div>
+
+            <!-- ADD FEEDBACK FORM -->
+            <form th:action="@{/feedback/add}"
+                  method="post">
+
+                <div class="row g-4">
+
+                    <!-- ORDER SELECTION -->
+                    <div class="col-md-6">
+
+                        <label for="orderId"
+                               class="form-label fw-semibold">
+
+                            Select Delivered Order
+
+                        </label>
+
+                        <select
+                                id="orderId"
+                                name="orderId"
+                                class="form-select form-select-lg rounded-4"
+                                required
+                                th:disabled="${#lists.isEmpty(orders)}">
+
+                            <option value="" selected disabled>
+                                Choose a delivered order
+                            </option>
+
+                            <option
+                                    th:each="order : ${orders}"
+                                    th:value="${order.orderId}"
+                                    th:text="${'Order #' + order.orderId
+                                    + ' - '
+                                    + (order.customer != null
+                                        ? order.customer.fullName
+                                        : 'Unknown Customer')}">
+                                Order #1 - Customer
+                            </option>
+
+                        </select>
+
+                        <small class="text-muted">
+                            Only orders marked DELIVERED are available.
+                        </small>
+
+                    </div>
+
+                    <!-- RATING -->
+                    <div class="col-md-6">
+
+                        <label for="rating"
+                               class="form-label fw-semibold">
+
+                            Rating
+
+                        </label>
+
+                        <select
+                                id="rating"
+                                name="rating"
+                                class="form-select form-select-lg rounded-4"
+                                required>
+
+                            <option value="" selected disabled>
+                                Select a rating
+                            </option>
+
+                            <option value="5">
+                                5 - Excellent
+                            </option>
+
+                            <option value="4">
+                                4 - Good
+                            </option>
+
+                            <option value="3">
+                                3 - Average
+                            </option>
+
+                            <option value="2">
+                                2 - Poor
+                            </option>
+
+                            <option value="1">
+                                1 - Very Poor
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- REVIEW MESSAGE -->
+                    <div class="col-12">
+
+                        <label for="reviewMessage"
+                               class="form-label fw-semibold">
+
+                            Review Message
+
+                        </label>
+
+                        <textarea
+                                id="reviewMessage"
+                                name="reviewMessage"
+                                class="form-control rounded-4"
+                                rows="5"
+                                maxlength="1000"
+                                placeholder="Share the customer's experience..."
+                                required></textarea>
+
+                        <small class="text-muted">
+                            Maximum 1,000 characters.
+                        </small>
+
+                    </div>
+
+                    <!-- INFORMATION NOTE -->
+                    <div class="col-12">
+
+                        <div class="alert alert-light border rounded-4 mb-0">
+
+                            <i class="fa-solid fa-circle-info me-2"></i>
+
+                            The customer name is taken from the
+                            selected Order.
+
+                            The feedback date is generated automatically,
+                            and new feedback is marked Visible.
+
+                        </div>
+
+                    </div>
+
+                    <!-- BUTTONS -->
+                    <div class="col-12 d-flex flex-wrap gap-3 mt-4">
+
+                        <button
+                                type="submit"
+                                class="btn btn-warning fw-bold rounded-4 px-5 py-3"
+                                th:disabled="${#lists.isEmpty(orders)}">
+
+                            <i class="fa-solid fa-floppy-disk me-2"></i>
+                            Save Feedback
+
+                        </button>
+
+                        <a th:href="@{/feedback}"
+                           class="btn btn-light fw-bold rounded-4 px-5 py-3">
+
+                            Cancel
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>
