@@ -11,23 +11,10 @@
 </head>
 <body>
 <div class="dashboard-wrapper">
-  <aside class="sidebar">
-    <a th:href="@{/}" href="/" class="sidebar-logo"><i class="fa-solid fa-bowl-food"></i> FoodFlow</a>
-    <ul class="sidebar-menu">
-      <li><a th:href="@{/dashboard}" href="/dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
-      <li><a th:href="@{/customer}" href="/customer" class="active"><i class="fa-solid fa-users"></i> Customers</a></li>
-      <li><a th:href="@{/restaurant}" href="/restaurant"><i class="fa-solid fa-store"></i> Restaurants</a></li>
-      <li><a th:href="@{/food}" href="/food"><i class="fa-solid fa-burger"></i> Food Items</a></li>
-      <li><a th:href="@{/order}" href="/order"><i class="fa-solid fa-receipt"></i> Orders</a></li>
-      <li><a th:href="@{/delivery}" href="/delivery"><i class="fa-solid fa-truck"></i> Delivery</a></li>
-      <li><a th:href="@{/payment}" href="/payment"><i class="fa-solid fa-credit-card"></i> Payments</a></li>
-      <li><a th:href="@{/feedback}" href="/feedback"><i class="fa-solid fa-star"></i> Feedback</a></li>
-    </ul>
-    <form th:action="@{/logout}" method="post" style="margin:24px 16px 0;">
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-      <button type="submit" class="btn btn-outline-danger w-100"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
-    </form>
-  </aside>
+
+  <!-- Shared Admin Sidebar -->
+  <div th:replace="~{fragments/admin-sidebar :: sidebar('customer')}"></div>
+
   <main class="main-content">
     <div class="topbar">
       <div><h1>Customer Management</h1><p>Manage customer details and account status.</p></div>
