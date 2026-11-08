@@ -253,14 +253,25 @@
 
                         <td>
 
-                            <a th:href="@{/order/{orderId}/items/delete/{itemId}
-                                (orderId=${order.orderId}, itemId=${item.orderItemId})}"
-                               class="btn btn-sm btn-outline-danger"
-                               onclick="return confirm('Remove this item from the order?')">
 
-                                Delete
+                            <!-- Secure Order Item Deletion -->
+                            <form th:action="@{/order/{orderId}/items/delete/{itemId}(orderId=${order.orderId},itemId=${item.orderItemId})}"
+                                  method="post"
+                                  class="d-inline"
+                                  onsubmit="return confirm('Remove this item from the order?');">
 
-                            </a>
+                                <!-- CSRF Protection -->
+                                <input type="hidden"
+                                       th:name="${_csrf.parameterName}"
+                                       th:value="${_csrf.token}">
+
+                                <button type="submit"
+                                        class="btn btn-sm btn-outline-danger">
+                                    Delete
+                                </button>
+
+                            </form>
+
 
                         </td>
 

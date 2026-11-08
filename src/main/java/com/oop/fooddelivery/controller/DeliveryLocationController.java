@@ -45,13 +45,5 @@ public class DeliveryLocationController {
         return ResponseEntity.ok(location);
     }
 
-    // Retrieve latest driver location
-    @GetMapping("/{deliveryId}/location")
-    public ResponseEntity<?> getLocation(
-            @PathVariable Long deliveryId) {
 
-        return locationService.getLocation(deliveryId)
-                .<ResponseEntity<?>>map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
 }

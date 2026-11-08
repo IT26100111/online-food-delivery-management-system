@@ -1,0 +1,104 @@
+
+<aside xmlns:th="http://www.thymeleaf.org"
+       class="sidebar"
+       th:fragment="sidebar(activePage)">
+
+  <a th:href="@{/}" class="sidebar-logo">
+    <i class="fa-solid fa-bowl-food"></i>
+    FoodFlow
+  </a>
+
+  <ul class="sidebar-menu">
+
+    <li>
+      <a th:href="@{/dashboard}"
+         th:classappend="${activePage == 'dashboard'} ? 'active' : ''">
+        <i class="fa-solid fa-chart-line"></i>
+        Dashboard
+      </a>
+    </li>
+
+    <li>
+      <a th:href="@{/customer}"
+         th:classappend="${activePage == 'customer'} ? 'active' : ''">
+        <i class="fa-solid fa-users"></i>
+        Customers
+      </a>
+    </li>
+
+    <li>
+      <a th:href="@{/restaurant}"
+         th:classappend="${activePage == 'restaurant'} ? 'active' : ''">
+        <i class="fa-solid fa-store"></i>
+        Restaurants
+      </a>
+    </li>
+
+    <li>
+      <a th:href="@{/food}"
+         th:classappend="${activePage == 'food'} ? 'active' : ''">
+        <i class="fa-solid fa-burger"></i>
+        Food Items
+      </a>
+    </li>
+
+    <li>
+      <a th:href="@{/order}"
+         th:classappend="${activePage == 'order'} ? 'active' : ''">
+        <i class="fa-solid fa-receipt"></i>
+        Orders
+      </a>
+    </li>
+
+    <li>
+      <a th:href="@{/delivery}"
+         th:classappend="${activePage == 'delivery'} ? 'active' : ''">
+        <i class="fa-solid fa-motorcycle"></i>
+        Deliveries
+      </a>
+    </li>
+
+    <li>
+      <a th:href="@{/payment}"
+         th:classappend="${activePage == 'payment'} ? 'active' : ''">
+        <i class="fa-solid fa-credit-card"></i>
+        Payments
+      </a>
+    </li>
+
+    <li>
+      <a th:href="@{/feedback}"
+         th:classappend="${activePage == 'feedback'} ? 'active' : ''">
+        <i class="fa-solid fa-comment-dots"></i>
+        Feedback
+      </a>
+    </li>
+
+    <li>
+      <a th:href="@{/}">
+        <i class="fa-solid fa-house"></i>
+        Back to Home
+      </a>
+    </li>
+
+  </ul>
+
+
+  <!-- Secure Admin Logout -->
+  <form th:action="@{/logout}"
+        method="post"
+        style="margin: 24px 14px 0;">
+
+    <input type="hidden"
+           th:name="${_csrf.parameterName}"
+           th:value="${_csrf.token}">
+
+    <button type="submit"
+            class="btn btn-outline-light w-100 rounded-3">
+      <i class="fa-solid fa-right-from-bracket me-2"></i>
+      Log Out
+    </button>
+  </form>
+
+
+</aside>
