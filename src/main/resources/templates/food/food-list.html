@@ -266,6 +266,23 @@
 
       </div>
 
+      <!-- Success message after a Food CRUD operation -->
+      <div th:if="${foodSuccess != null}"
+           class="alert alert-success rounded-3"
+           role="status"
+           th:text="${foodSuccess}">
+        Food item saved successfully.
+      </div>
+
+      <!-- Error message when an operation is rejected -->
+      <div th:if="${foodError != null}"
+           class="alert alert-danger rounded-3"
+           role="alert"
+           th:text="${foodError}">
+        This food item cannot be deleted.
+      </div>
+
+
     </section>
 
   </main>
